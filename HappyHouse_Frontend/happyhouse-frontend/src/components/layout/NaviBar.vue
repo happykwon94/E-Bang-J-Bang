@@ -17,7 +17,7 @@
           <a class="nav-link" href="#">QnA</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">주택</a>
+          <router-link :to="{name: 'House'}" class="nav-link">주택</router-link>
         </li>
       </ul>
       <ul class="navbar-nav ml-auto">

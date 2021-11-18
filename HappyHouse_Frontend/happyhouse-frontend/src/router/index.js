@@ -2,6 +2,11 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 
+import House from "../views/House.vue";
+import HouseMap from "../components/house/HouseMap.vue";
+import HouseList from "../components/house/HouseList.vue";
+
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -18,6 +23,23 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/About.vue"),
+  },
+  {
+    path: "/house",
+    name: "House",
+    component: House,
+    children: [
+      {
+        path: "/houseMap",
+        name: "HouseMap",
+        component: HouseMap
+      },
+      {
+        path: "/houseList",
+        name: "HouseList",
+        component: HouseList
+      }
+    ]
   },
 ];
 
