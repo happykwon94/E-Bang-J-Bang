@@ -43,10 +43,11 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import HouseList from "../components/house/HouseList.vue";
 import HouseMap from "../components/house/HouseMap.vue";
 import SearchBar from "../components/layout/SearchBar.vue";
-
+const houseStore = "houseStore";
 export default {
   name: "House",
   components: {
@@ -54,12 +55,16 @@ export default {
     HouseMap,
     HouseList,
   },
+  computed: {
+    ...mapState(houseStore, ["houses"]),
+  },
 };
 </script>
 
 <style>
-.col-8, .col{
-    padding: 0px;
-    margin: 0px;
+.col-8,
+.col {
+  padding: 1px;
+  margin: 1px;
 }
 </style>

@@ -11,20 +11,65 @@
         backgroundPosition: '50%',
       }"
     >
-      <div class="container searchbar fade-in-box" style="padding-top: 150px; text-align: center">
+      <div
+        class="container searchbar fade-in-box"
+        style="padding-top: 150px; text-align: center"
+      >
         <h2 style="color: white"><strong>지역 매물 검색</strong></h2>
         <div class="input-group mb-3">
-          <select class="form-control searchbar" name="" id="sido">
-            <option value="">시/도</option>
+          <b-form-select
+            class="form-control searchbar"
+            id="sido"
+            v-model="sidoCode"
+            @change="gugunList"
+          >
+            <option
+              v-for="(sido, index) in sidos"
+              :key="index"
+              :value="sido.sidoCode"
+              selected
+            >
+              {{ sido.sidoName }}
+            </option>
+          </b-form-select>
+          <select
+            class="form-control searchbar"
+            name=""
+            id="gugun"
+            v-model="gugunCode"
+            @change="dongList"
+          >
+            <option
+              v-for="(gugun, index) in guguns"
+              :key="index"
+              :value="gugun.gugunCode"
+            >
+              {{ gugun.gugunName }}
+            </option>
           </select>
-          <select class="form-control searchbar" name="" id="gugun">
-            <option value="">구/군</option>
-          </select>
-          <select class="form-control searchbar" name="" id="dong">
-            <option value="">읍/면/동</option>
+          <select
+            class="form-control searchbar"
+            name=""
+            id="dong"
+            v-model="dongCode"
+            @change="aptList"
+          >
+            <option
+              v-for="(dong, index) in dongs"
+              :key="index"
+              :value="dong.dongCode"
+            >
+              {{ dong.dongName }}
+            </option>
           </select>
           <div class="input-group-append">
-            <button type="button" id="lookMap" class="btn btn-secondary btn-outline-light">지도보기</button>
+            <button
+              type="button"
+              id="lookMap"
+              class="btn btn-secondary btn-outline-light"
+            >
+              지도보기
+            </button>
           </div>
         </div>
       </div>
@@ -33,7 +78,43 @@
 </template>
 
 <script>
-export default {};
+import { mapActions, mapState } from "vuex";
+
+const houseStore = "houseStore";
+
+export default {
+  name: "SearchBar",
+  data() {
+    return {
+      sidoCode: "",
+      gugunCode: "",
+      dongCode: "",
+    };
+  },
+  created() {
+    this.sidoList();
+  },
+  methods: {
+    ...mapActions(houseStore, ["getSido", "getGugun", "getDong", "getAptList"]),
+    sidoList() {
+      // console.log("sidoList")
+      this.getSido();
+    },
+    gugunList() {
+      // console.log(this.sidoCode);
+      this.getGugun(this.sidoCode);
+    },
+    dongList() {
+      this.getDong(this.gugunCode);
+    },
+    aptList() {
+      this.getAptList(this.dongCode);
+    },
+  },
+  computed: {
+    ...mapState(houseStore, ["sidos", "guguns", "dongs"]),
+  },
+};
 </script>
 
 <style></style>

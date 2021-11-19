@@ -13,9 +13,6 @@ export default {
   components: {
     NaviBar,
   },
-  created() {
-    this.$router.push({ name: "Home" });
-  },
 };
 </script>
 
