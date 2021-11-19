@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,6 +21,7 @@ import com.ssafy.ebangjbang.model.service.HouseService;
 
 @RestController
 @RequestMapping("/house")
+@CrossOrigin(origins = "*")
 public class HouseController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(HouseController.class);
@@ -30,7 +32,7 @@ public class HouseController {
 	@GetMapping("sido")
 	public ResponseEntity<List<SidoGugunCodeDto>> sido() throws Exception {
 		List<SidoGugunCodeDto> list = houseService.getSido();
-		
+		logger.debug("sido");
 		if(list != null) {
 			return new ResponseEntity<List<SidoGugunCodeDto>>(list, HttpStatus.OK);
 		}else {

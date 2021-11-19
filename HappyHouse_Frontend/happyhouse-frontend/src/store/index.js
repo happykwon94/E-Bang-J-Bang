@@ -3,9 +3,15 @@ import Vuex from "vuex";
 
 Vue.use(Vuex);
 
-export default new Vuex.Store({
+import houseStore from "@/store/modules/houseStore.js";
+
+const store = new Vuex.Store({
   state: {},
   mutations: {},
   actions: {},
-  modules: {},
+  modules: {
+    houseStore,
+  },
 });
+
+export default store;
