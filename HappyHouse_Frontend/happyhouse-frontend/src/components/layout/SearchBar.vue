@@ -27,14 +27,12 @@
               v-for="(sido, index) in sidos"
               :key="index"
               :value="sido.sidoCode"
-              selected
             >
               {{ sido.sidoName }}
             </option>
           </b-form-select>
           <select
             class="form-control searchbar"
-            name=""
             id="gugun"
             v-model="gugunCode"
             @change="dongList"
@@ -49,7 +47,6 @@
           </select>
           <select
             class="form-control searchbar"
-            name=""
             id="dong"
             v-model="dongCode"
             @change="aptList"
@@ -105,6 +102,7 @@ export default {
       this.getGugun(this.sidoCode);
     },
     dongList() {
+      console.log(this.gugunCode);
       this.getDong(this.gugunCode);
     },
     aptList() {

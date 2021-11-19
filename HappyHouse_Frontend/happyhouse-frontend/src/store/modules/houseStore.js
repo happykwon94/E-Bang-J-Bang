@@ -3,26 +3,35 @@ import http from "@/util/http-common.js";
 const houseStore = {
   namespaced: true,
   state: {
-    sidos: [{ sidoCode: "", sidoName: "선택" }],
-    guguns: [],
-    dongs: [],
+    sidos: [{ sidoCode: "", sidoName: "시/도" }],
+    guguns: [{ gugunCode: "", gugunName: "구/군" }],
+    dongs: [{ dongCode: "", dongName: "동" }],
     houses: [],
     housespos: [],
     house: null,
   },
   mutations: {
     SET_SIDO_LIST(state, data) {
-      state.sidos = [{ sidoCode: "", sidoName: "선택" }];
+      state.sidos = [{ sidoCode: "", sidoName: "시/도" }];
       data.forEach((sido) => {
         state.sidos.push({ sidoCode: sido.sidoCode, sidoName: sido.sidoName });
       });
-      console.log(state.sidos);
+      //   console.log(state.sidos);
     },
     SET_GUGUN_LIST(state, data) {
-      state.guguns = data;
+      state.guguns = [{ gugunCode: "", gugunName: "구/군" }];
+      data.forEach((gugun) => {
+        state.guguns.push({
+          gugunCode: gugun.gugunoCode,
+          gugunName: gugun.gugunName,
+        });
+      });
     },
     SET_DONG_LIST(state, data) {
-      state.dongs = data;
+      state.dongs = [{ dongCode: "", dongName: "동" }];
+      data.forEach((dong) => {
+        state.dongs.push({ dongCode: dong.dongCode, dongName: dong.dongName });
+      });
     },
     SET_APT_LIST(state, data) {
       state.houses = data;
@@ -47,7 +56,7 @@ const houseStore = {
     },
     getGugun({ commit }, sidoCode) {
       const params = { sido: sidoCode };
-      //   console.log(sidoCode);
+      console.log(sidoCode);
       http
         .get(`/house/gugun`, { params })
         .then((response) => {
@@ -59,12 +68,12 @@ const houseStore = {
         });
     },
     getDong({ commit }, gugunCode) {
-      //   console.log(gugunCode);
+      console.log(gugunCode);
       const params = { gugun: gugunCode };
       http
         .get(`/house/dong`, { params })
         .then((response) => {
-          //   console.log(response);
+          console.log(response.data);
           commit("SET_DONG_LIST", response.data);
         })
         .catch((error) => {
