@@ -6,6 +6,12 @@ import House from "../views/House.vue";
 import HouseMap from "../components/house/HouseMap.vue";
 import HouseList from "../components/house/HouseList.vue";
 
+import NoticeBoard from "@/views/NoticeBoard.vue";
+import NoticeBoardList from "@/components/notice/NoticeBoardList.vue";
+import NoticeBoardView from "@/components/notice/NoticeBoardView.vue";
+
+import User from "@/views/User.vue";
+import SignIn from "@/components/user/SignIn.vue";
 
 Vue.use(VueRouter);
 
@@ -16,15 +22,6 @@ const routes = [
     component: Home,
   },
   {
-    path: "/about",
-    name: "About",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue"),
-  },
-  {
     path: "/house",
     name: "House",
     component: House,
@@ -32,14 +29,45 @@ const routes = [
       {
         path: "/houseMap",
         name: "HouseMap",
-        component: HouseMap
+        component: HouseMap,
       },
       {
         path: "/houseList",
         name: "HouseList",
-        component: HouseList
-      }
-    ]
+        component: HouseList,
+      },
+    ],
+  },
+  {
+    path: "/notice",
+    name: "Notice",
+    component: NoticeBoard,
+    redirect: "/notice/list",
+    children: [
+      {
+        path: "list",
+        name: "NoticeBoardList",
+        component: NoticeBoardList,
+      },
+      {
+        path: "list/:no",
+        name: "NoticeBoardView",
+        component: NoticeBoardView,
+      },
+    ],
+  },
+  {
+    path: "/user",
+    name: "User",
+    component: User,
+    redirect: "/user/signin",
+    children: [
+      {
+        path: "/signin",
+        name: "SignIn",
+        component: SignIn,
+      },
+    ],
   },
 ];
 
