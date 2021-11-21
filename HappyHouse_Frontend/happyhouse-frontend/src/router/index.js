@@ -12,6 +12,8 @@ import NoticeBoardView from "@/components/notice/NoticeBoardView.vue";
 
 import User from "@/views/User.vue";
 import SignIn from "@/components/user/SignIn.vue";
+import SignUp from "@/components/user/SignUp.vue";
+import KakaoLogin from "@/components/social/KakaoLogin.vue";
 
 Vue.use(VueRouter);
 
@@ -67,7 +69,17 @@ const routes = [
         name: "SignIn",
         component: SignIn,
       },
+      {
+        path: "/signup",
+        name: "SignUp",
+        component: SignUp,
+      },
     ],
+  },
+  {
+    path: "/social/kakao",
+    name: "KakaoLogin",
+    component: KakaoLogin,
   },
 ];
 

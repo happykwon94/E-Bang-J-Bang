@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ssafy.ebangjbang.model.Dto.NoticeDto;
 import com.ssafy.ebangjbang.model.mapper.NoticeMapper;
-import com.ssafy.ebangjbang.model.notice.NoticeDto;
 
 @Service
 public class NoticeServiceImpl implements NoticeService{

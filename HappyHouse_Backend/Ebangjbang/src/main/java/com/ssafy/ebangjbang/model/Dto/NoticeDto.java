@@ -1,4 +1,4 @@
-package com.ssafy.ebangjbang.model.notice;
+package com.ssafy.ebangjbang.model.Dto;
 
 public class NoticeDto {
 	private String no;

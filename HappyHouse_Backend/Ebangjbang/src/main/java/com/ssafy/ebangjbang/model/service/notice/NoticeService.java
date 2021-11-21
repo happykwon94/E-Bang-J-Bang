@@ -2,7 +2,7 @@ package com.ssafy.ebangjbang.model.service.notice;
 
 import java.util.List;
 
-import com.ssafy.ebangjbang.model.notice.NoticeDto;
+import com.ssafy.ebangjbang.model.Dto.NoticeDto;
 
 public interface NoticeService {
 	// 전체 공지사항 가져오기

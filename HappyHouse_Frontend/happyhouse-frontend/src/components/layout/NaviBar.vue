@@ -20,12 +20,21 @@
           <router-link :to="{ name: 'House' }" class="nav-link">주택</router-link>
         </li>
       </ul>
-      <ul class="navbar-nav ml-auto">
+      <ul class="navbar-nav ml-auto" v-if="!userInfo">
         <li class="nav-item">
           <router-link class="nav-link" :to="{ name: 'SignIn' }">로그인</router-link>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">회원가입</a>
+          <router-link class="nav-link" :to="{ name: 'SignUp' }">회원가입</router-link>
+        </li>
+      </ul>
+
+      <ul class="navbar-nav ml-auto" v-else>
+        <li class="nav-item">
+          <router-link class="nav-link" :to="{ name: 'SignIn' }">{{ userInfo.nickName }}({{ userInfo.id }})</router-link>
+        </li>
+        <li class="nav-item">
+          <span class="nav-link" @click="onClickLogout">로그아웃</span>
         </li>
       </ul>
     </div>
@@ -33,8 +42,26 @@
 </template>
 
 <script>
+import { mapState, mapMutations } from "vuex";
+
+const userStore = "userStore";
 export default {
   name: "NaviBar",
+  computed: {
+    ...mapState(userStore, ["isLogin", "userInfo"]),
+  },
+  methods: {
+    ...mapMutations(userStore, ["SET_IS_LOGIN", "SET_USER_INFO"]),
+    onClickLogout() {
+      this.SET_IS_LOGIN(false);
+      this.SET_USER_INFO(null);
+      sessionStorage.removeItem("access-token");
+      if (this.$route.path != "/") {
+        this.$router.push({ name: "Home" });
+        alert("로그아웃 되었습니다.");
+      }
+    },
+  },
 };
 </script>
 
