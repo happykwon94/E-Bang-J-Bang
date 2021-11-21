@@ -8,7 +8,8 @@ const houseStore = {
     dongs: [{ dongCode: "", dongName: "동" }],
     houses: [],
     housespos: [],
-    house: null,
+    houseDeal: null,
+    houseInfo: null,
   },
   mutations: {
     SET_SIDO_LIST(state, data) {
@@ -16,13 +17,13 @@ const houseStore = {
       data.forEach((sido) => {
         state.sidos.push({ sidoCode: sido.sidoCode, sidoName: sido.sidoName });
       });
-      //   console.log(state.sidos);
+      // console.log(state.sidos);
     },
     SET_GUGUN_LIST(state, data) {
       state.guguns = [{ gugunCode: "", gugunName: "구/군" }];
       data.forEach((gugun) => {
         state.guguns.push({
-          gugunCode: gugun.gugunoCode,
+          gugunCode: gugun.gugunCode,
           gugunName: gugun.gugunName,
         });
       });
@@ -35,10 +36,17 @@ const houseStore = {
     },
     SET_APT_LIST(state, data) {
       state.houses = data;
-      data.forEach((house) => {
-        state.housespos.push({ lat: house.lat, lng: house.lng });
-      });
-      console.log(state.housespos);
+      // state.housespos = [];
+      // data.forEach((house) => {
+      //   state.housespos.push({ lat: house.lat, lng: house.lng });
+      // });
+      // // console.log(state.housespos);
+    },
+    SET_APT_INFO(state, data) {
+      state.houseInfo = data;
+    },
+    SET_APT_DEAL(state, data) {
+      state.houseDeal = data;
     },
   },
   actions: {
@@ -56,7 +64,7 @@ const houseStore = {
     },
     getGugun({ commit }, sidoCode) {
       const params = { sido: sidoCode };
-      console.log(sidoCode);
+      console.log("시도 :" + sidoCode);
       http
         .get(`/house/gugun`, { params })
         .then((response) => {
@@ -68,12 +76,12 @@ const houseStore = {
         });
     },
     getDong({ commit }, gugunCode) {
-      console.log(gugunCode);
+      console.log("구군: " + gugunCode);
       const params = { gugun: gugunCode };
       http
         .get(`/house/dong`, { params })
         .then((response) => {
-          console.log(response.data);
+          // console.log(response.data);
           commit("SET_DONG_LIST", response.data);
         })
         .catch((error) => {
@@ -81,13 +89,28 @@ const houseStore = {
         });
     },
     getAptList({ commit }, dongCode) {
-      //   console.log(dongCode);
+      console.log("동: " + dongCode);
       const params = { dong: dongCode };
       http
         .get(`/house/aptList`, { params })
         .then((response) => {
           console.log(response.data);
           commit("SET_APT_LIST", response.data);
+          commit("SET_APT_DEAL", null);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    getHouse({ commit }, house) {
+      console.log("house: " + house);
+      const params = { aptCode: house.aptCode };
+      http
+        .get(`/house/aptInfo`, { params })
+        .then((response) => {
+          console.log(response.data);
+          commit("SET_APT_DEAL", response.data);
+          commit("SET_APT_INFO", house);
         })
         .catch((error) => {
           console.log(error);
