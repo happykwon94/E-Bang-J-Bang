@@ -101,9 +101,9 @@ public class HouseController {
 	}
 	
 	@GetMapping("store")
-	public ResponseEntity<List<SeoulStoreDto>> getStoreList(@RequestParam("dong") String dong, @RequestParam("type") String type) throws Exception {
+	public ResponseEntity<List<SeoulStoreDto>> getStoreList(@RequestParam("dongName") String dongName, @RequestParam("classes") String classes) throws Exception {
 		List<SeoulStoreDto> list;
-		list = houseService.getStoreList(dong, type);
+		list = houseService.getStoreList(dongName, classes);
 		
 		if(list != null) {
 			return new ResponseEntity<List<SeoulStoreDto>>(list, HttpStatus.OK);

@@ -12,13 +12,13 @@ export default {
   name: "HouseMap",
   data() {
     return {
-      map: null,
+      map1: null,
       markers: [],
       isDetail: false,
     };
   },
   computed: {
-    ...mapState(houseStore, ["houses"]),
+    ...mapState(houseStore, ["houses", "houseInfo"]),
   },
   watch: {
     houses() {
@@ -26,9 +26,11 @@ export default {
         marker.setMap(null);
       });
       this.markers = [];
-      this.houses.forEach((house) => {
-        this.displayMarker(house);
-      });
+      if (this.houses) {
+        this.houses.forEach((house) => {
+          this.displayMarker(house);
+        });
+      }
     },
   },
   mounted() {
@@ -39,7 +41,7 @@ export default {
       /* global kakao */
       script.onload = () => kakao.maps.load(this.initMap);
       script.src =
-        "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=e3f5368c16f60513648c83fa8b24274d";
+        "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=e3f5368c16f60513648c83fa8b24274d&libraries=services";
       document.head.appendChild(script);
     }
   },
@@ -59,35 +61,44 @@ export default {
           center: position,
           level: 3,
         };
-        this.map = new kakao.maps.Map(container, options);
-        let marker = new kakao.maps.Marker({
-          map: this.map,
+        this.map1 = new kakao.maps.Map(container, options);
+        new kakao.maps.Marker({
+          map: this.map1,
           position: position,
         });
-        console.log(marker);
-        // marker.setMap(this.map);
+        if (this.houses != null) {
+          this.houses.forEach((house) => {
+            this.displayMarker(house);
+          });
+          // console.log("this.houseInfo");
+          // console.log(this.houseInfo);
+          this.map1.setCenter(
+            new kakao.maps.LatLng(this.houseInfo.lat, this.houseInfo.lng)
+          );
+        }
       });
     },
     //houses가 바뀔 때마다 새로 좌표찍기
     displayMarker(house) {
-      console.log(house);
+      // console.log("house");
+      // console.log(house);
       var moveLatLng = new kakao.maps.LatLng(house.lat, house.lng);
+      console.log(moveLatLng);
       // 마커 생성
       let marker = new kakao.maps.Marker({
-        map: this.map,
+        map: this.map1,
         position: moveLatLng,
+        clickable: true,
       });
-
-      // map에 마커 생성
-      marker.setMap(this.map);
 
       // marker 배열에 넣기
       this.markers.push(marker);
 
       // 마커 위에 커스텀오버레이를 표시
       let overlay = new kakao.maps.CustomOverlay({
-        map: this.map,
+        map: this.map1,
         position: moveLatLng,
+        clickable: true,
       });
 
       // 커스텀 오버레이 숨기기
@@ -138,7 +149,6 @@ export default {
       c7.innerHTML = "자세히 보기";
       c7.onclick = () => {
         this.getHouse(house);
-        console.log("pick");
       };
       c3.appendChild(c7);
 
@@ -146,12 +156,16 @@ export default {
 
       // 마커를 클릭했을 때 커스텀 오버레이를 표시합니다
       kakao.maps.event.addListener(marker, "click", () => {
-        overlay.setMap(this.map);
-        this.map.panTo(moveLatLng);
+        overlay.setMap(this.map1);
+        this.map1.panTo(moveLatLng);
+      });
+
+      kakao.maps.event.addListener(this.map1, "click", () => {
+        overlay.setMap(null);
       });
 
       // 지도 중심좌표를 접속위치로 변경합니다
-      this.map.setCenter(moveLatLng);
+      this.map1.panTo(moveLatLng);
     },
   },
 };
@@ -263,5 +277,4 @@ export default {
 ul {
   list-style: none;
 }
-
 </style>
