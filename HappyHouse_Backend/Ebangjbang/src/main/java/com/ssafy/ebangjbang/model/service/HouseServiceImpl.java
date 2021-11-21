@@ -61,10 +61,10 @@ public class HouseServiceImpl implements HouseService {
 	}
 
 	@Override
-	public List<SeoulStoreDto> getStoreList(String dong, String type) throws Exception {
+	public List<SeoulStoreDto> getStoreList(String dongName, String classes) throws Exception {
 		HashMap<String, String> map = new HashMap<String, String>();
-		map.put("dong", dong);
-		map.put("type", type);
+		map.put("dongName", dongName);
+		map.put("classes", classes);
 		return sqlSession.getMapper(HouseMapper.class).getStoreList(map);
 	}
 }

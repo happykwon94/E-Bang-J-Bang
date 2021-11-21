@@ -22,5 +22,5 @@ public interface HouseService {
 
 	HouseInfoDto getAddressName(String gugunCode, String dongName) throws Exception;
 
-	List<SeoulStoreDto> getStoreList(String dong, String type) throws Exception;
+	List<SeoulStoreDto> getStoreList(String dongName, String classes) throws Exception;
 }

@@ -6,10 +6,13 @@ const houseStore = {
     sidos: [{ sidoCode: "", sidoName: "시/도" }],
     guguns: [{ gugunCode: "", gugunName: "구/군" }],
     dongs: [{ dongCode: "", dongName: "동" }],
-    houses: [],
+    houses: null,
     housespos: [],
     houseDeal: null,
     houseInfo: null,
+    foodStore: [],
+    lifeStore: [],
+    eduStore: [],
   },
   mutations: {
     SET_SIDO_LIST(state, data) {
@@ -48,6 +51,15 @@ const houseStore = {
     SET_APT_DEAL(state, data) {
       state.houseDeal = data;
     },
+    SET_FOOD_STORE(state, data) {
+      state.foodStore = data;
+    },
+    SET_LIFE_STORE(state, data) {
+      state.lifeStore = data;
+    },
+    SET_EDU_STORE(state, data) {
+      state.eduStore = data;
+    },
   },
   actions: {
     getSido({ commit }) {
@@ -70,6 +82,8 @@ const houseStore = {
         .then((response) => {
           // console.log(response);
           commit("SET_GUGUN_LIST", response.data);
+          commit("SET_APT_DEAL", null);
+          commit("SET_APT_LIST", []);
         })
         .catch((error) => {
           console.log(error);
@@ -83,6 +97,8 @@ const houseStore = {
         .then((response) => {
           // console.log(response.data);
           commit("SET_DONG_LIST", response.data);
+          commit("SET_APT_DEAL", null);
+          commit("SET_APT_LIST", []);
         })
         .catch((error) => {
           console.log(error);
@@ -96,7 +112,6 @@ const houseStore = {
         .then((response) => {
           console.log(response.data);
           commit("SET_APT_LIST", response.data);
-          commit("SET_APT_DEAL", null);
         })
         .catch((error) => {
           console.log(error);
@@ -115,6 +130,22 @@ const houseStore = {
         .catch((error) => {
           console.log(error);
         });
+    },
+    getStoreList({ commit }, dongName) {
+      console.log(dongName);
+      console.log(commit);
+      var params = { dongName: dongName, classes: "음식" };
+      http.get(`/house/store`, { params }).then((response) => {
+        commit("SET_FOOD_STORE", response.data);
+      });
+      params = { dongName: dongName, classes: "소매" };
+      http.get(`/house/store`, { params }).then((response) => {
+        commit("SET_LIFE_STORE", response.data);
+      });
+      params = { dongName: dongName, classes: "학문/교육" };
+      http.get(`/house/store`, { params }).then((response) => {
+        commit("SET_EDU_STORE", response.data);
+      });
     },
   },
   modules: {},

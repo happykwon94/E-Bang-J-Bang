@@ -66,9 +66,9 @@
 	</select>
 	
 	<select id="getStoreList" parameterType="hashmap" resultType="SeoulStoreDto">
-		select b, e, s, an, am
+		select *
 		from seoulstore s 
-		where s = #{dong} and e = #{type};
+		where dongName = #{dongName} and classes = #{classes};
 	</select>
 	
 </mapper>
