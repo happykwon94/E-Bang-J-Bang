@@ -5,11 +5,11 @@
       <hr />
       <div class="login-d">
         <label for="">아이디</label>
-        <input type="text" class="form-control" id="id" name="id" placeholder="ID" required />
+        <input type="text" class="form-control" id="id" name="id" placeholder="ID" required v-model="user.id" />
       </div>
       <div class="login-d">
         <label for="">비밀번호</label>
-        <input type="password" class="form-control" id="password" name="password" placeholder="PASSWORD" required />
+        <input type="password" class="form-control" id="password" name="password" placeholder="PASSWORD" required v-model="user.password" />
       </div>
       <div>
         <div class="checkbox login-d">
@@ -21,10 +21,10 @@
           </span>
         </div>
         <div>
-          <button type="button" class="" style="width: 100%; height: 45px">로그인</button>
+          <button type="button" class="btn btn-primary" id="loginBtn" @click="confirm">로그인</button>
         </div>
         <div>
-          <img src="@/assets/kakao_login_medium_wide.png" alt="" />
+          <img src="@/assets/kakao_login_medium_wide.png" id="kakaoLoginBtn" @click="kakaoLogin()" />
         </div>
       </div>
     </form>
@@ -32,12 +32,69 @@
 </template>
 
 <script>
-export default {};
+import { mapState, mapActions } from "vuex";
+
+// userStore.js에 네임 스페이스에 설정이 되어있음
+const userStore = "userStore";
+
+export default {
+  name: "SignIn",
+  data() {
+    return {
+      user: {
+        id: null,
+        password: null,
+      },
+    };
+  },
+  computed: {
+    // memberStore를 사용하겠다.
+    ...mapState(userStore, ["isLogin", "isLoginError"]),
+  },
+  methods: {
+    ...mapActions(userStore, ["userConfirm", "getUserInfo", "kakaoSocial"]),
+    async confirm() {
+      await this.userConfirm(this.user);
+
+      let token = sessionStorage.getItem("access-token");
+
+      console.log(this.isLogin);
+
+      if (this.isLogin) {
+        console.log("1");
+        await this.getUserInfo(token);
+        console.log("2");
+        this.$router.push({ name: "Home" });
+      } else {
+        alert("등록되지 않은 회원입니다.");
+        this.user.id = null;
+        this.user.password = null;
+      }
+    },
+    movePage() {
+      this.$router.push({ name: "SignUp" });
+    },
+    kakaoLogin() {
+      // 코드 발급
+      this.kakaoSocial();
+    },
+  },
+};
 </script>
 
 <style>
 * {
   font-family: "Noto Sans KR", sans-serif;
+}
+
+#loginBtn {
+  width: 100%;
+  height: 45px;
+  margin-bottom: 10px;
+}
+
+#kakaoLoginBtn {
+  cursor: pointer;
 }
 
 .login-body {

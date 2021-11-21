@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafy.ebangjbang.model.notice.NoticeDto;
+import com.ssafy.ebangjbang.model.Dto.NoticeDto;
 import com.ssafy.ebangjbang.model.service.notice.NoticeService;
 
 @CrossOrigin("*")
