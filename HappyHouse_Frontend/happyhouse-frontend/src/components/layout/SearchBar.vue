@@ -75,7 +75,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapMutations, mapState } from "vuex";
 
 const houseStore = "houseStore";
 
@@ -93,9 +93,11 @@ export default {
   },
   methods: {
     ...mapActions(houseStore, ["getSido", "getGugun", "getDong", "getAptList"]),
+    ...mapMutations(houseStore, ["SET_HOUSE"]),
     sidoList() {
       // console.log("sidoList")
       this.getSido();
+      // this.SET_HOUSE(null); 왜 안되는거닝,,
     },
     gugunList() {
       // console.log(this.sidoCode);
@@ -110,7 +112,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(houseStore, ["sidos", "guguns", "dongs"]),
+    ...mapState(houseStore, ["sidos", "guguns", "dongs", "house"]),
   },
 };
 </script>

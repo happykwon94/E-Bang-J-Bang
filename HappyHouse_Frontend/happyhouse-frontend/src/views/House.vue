@@ -29,12 +29,17 @@
             </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col">
-            <house-list />
-          </div>
-          <div class="col-8">
-            <house-map />
+        <div class="row-12" v-if="this.houseDeal != null">
+            <house-detail />
+        </div>
+        <div class="row-12" v-else>
+          <div class="row">
+            <div class="col">
+              <house-list />
+            </div>
+            <div class="col-8">
+              <house-map />
+            </div>
           </div>
         </div>
       </div>
@@ -44,6 +49,7 @@
 
 <script>
 import { mapState } from "vuex";
+import HouseDetail from "../components/house/HouseDetail.vue";
 import HouseList from "../components/house/HouseList.vue";
 import HouseMap from "../components/house/HouseMap.vue";
 import SearchBar from "../components/layout/SearchBar.vue";
@@ -54,9 +60,10 @@ export default {
     SearchBar,
     HouseMap,
     HouseList,
+    HouseDetail,
   },
   computed: {
-    ...mapState(houseStore, ["houses"]),
+    ...mapState(houseStore, ["houses", "houseDeal"]),
   },
 };
 </script>
