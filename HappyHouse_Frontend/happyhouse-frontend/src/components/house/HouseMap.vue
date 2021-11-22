@@ -6,28 +6,37 @@
 </template>
 
 <script language="JavaScript">
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapMutations, mapState } from "vuex";
 const houseStore = "houseStore";
 export default {
   name: "HouseMap",
   data() {
     return {
       map1: null,
-      markers: [],
+      markers1: [],
       isDetail: false,
     };
   },
   computed: {
-    ...mapState(houseStore, ["houses", "houseInfo"]),
+    ...mapState(houseStore, [
+      "houses",
+      "houseInfo",
+      "isGetData",
+      "gugunCode",
+      "address",
+      "lat",
+      "lng",
+    ]),
   },
   watch: {
     houses() {
-      this.markers.forEach((marker) => {
+      this.markers1.forEach((marker) => {
         marker.setMap(null);
       });
-      this.markers = [];
+      this.markers1 = [];
       if (this.houses) {
         this.houses.forEach((house) => {
+          console.log("1");
           this.displayMarker(house);
         });
       }
@@ -46,8 +55,10 @@ export default {
     }
   },
   methods: {
-    ...mapActions(houseStore, ["getHouse"]),
+    ...mapActions(houseStore, ["getHouse", "getHouse2", "addressName"]),
+    ...mapMutations(houseStore, ["SET_LAT_LNG"]),
     initMap() {
+      console.log("init");
       //지도를 담을 dom
       const container = document.getElementById("map1");
       var lat, lng, position;
@@ -68,104 +79,209 @@ export default {
         });
         if (this.houses != null) {
           this.houses.forEach((house) => {
+            console.log("2");
             this.displayMarker(house);
           });
-          // console.log("this.houseInfo");
-          // console.log(this.houseInfo);
-          this.map1.setCenter(
-            new kakao.maps.LatLng(this.houseInfo.lat, this.houseInfo.lng)
-          );
+          console.log("여기");
+          if (this.housesDeal == null) {
+            console.log("선택좌표");
+            console.log(this.houseInfo.lat);
+            console.log(this.houseInfo.lng);
+            this.map1.setCenter(
+              new kakao.maps.LatLng(this.houseInfo.lat, this.houseInfo.lng)
+            );
+          }
         }
       });
     },
     //houses가 바뀔 때마다 새로 좌표찍기
-    displayMarker(house) {
-      // console.log("house");
-      // console.log(house);
-      var moveLatLng = new kakao.maps.LatLng(house.lat, house.lng);
-      console.log(moveLatLng);
-      // 마커 생성
-      let marker = new kakao.maps.Marker({
-        map: this.map1,
-        position: moveLatLng,
-        clickable: true,
-      });
+    async displayMarker(house) {
+      if (!this.isGetData) {
+        console.log("db");
+        // console.log("house");
+        // console.log(house);
+        let moveLatLng = new kakao.maps.LatLng(house.lat, house.lng);
+        // console.log(moveLatLng);
+        // 마커 생성
+        let marker = new kakao.maps.Marker({
+          map: this.map1,
+          position: moveLatLng,
+          clickable: true,
+        });
 
-      // marker 배열에 넣기
-      this.markers.push(marker);
+        // marker 배열에 넣기
+        this.markers1.push(marker);
 
-      // 마커 위에 커스텀오버레이를 표시
-      let overlay = new kakao.maps.CustomOverlay({
-        map: this.map1,
-        position: moveLatLng,
-        clickable: true,
-      });
+        // 마커 위에 커스텀오버레이를 표시
+        let overlay = new kakao.maps.CustomOverlay({
+          map: this.map1,
+          position: moveLatLng,
+          clickable: true,
+        });
 
-      // 커스텀 오버레이 숨기기
-      overlay.setMap(null);
-
-      // 커스텀 오버레이
-      let content = document.createElement("div");
-      content.className = "wrap";
-      let c1 = document.createElement("div");
-      c1.className = "info";
-      content.appendChild(c1);
-      let c2 = document.createElement("div");
-      c2.className = "title";
-      c2.innerHTML = house.aptName;
-      c1.appendChild(c2);
-      let closeBtn = document.createElement("button");
-      closeBtn.className = "close";
-      // x 버튼 클릭시 커스텀 오버레이 창닫기
-      closeBtn.onclick = () => {
+        // 커스텀 오버레이 숨기기
         overlay.setMap(null);
-      };
-      c2.appendChild(closeBtn);
-      let c3 = document.createElement("div");
-      c3.className = "body";
-      c1.appendChild(c3);
-      let c4 = document.createElement("div");
-      c4.className = "desc";
-      c4.innerHTML =
-        "주소 : " +
-        house.sidoName +
-        " " +
-        house.gugunName +
-        " " +
-        house.dongName +
-        " " +
-        house.jibun;
-      c3.appendChild(c4);
-      let c5 = document.createElement("div");
-      c5.className = "desc";
-      c5.innerHTML = "건축년도 : " + house.buildYear + "년";
-      c3.appendChild(c5);
-      let c6 = document.createElement("div");
-      c6.className = "desc";
-      c6.innerHTML = "최근 매매가 : " + house.recentPrice + "만원";
-      c3.appendChild(c6);
-      let c7 = document.createElement("button");
-      c7.className = "btn-sm btn-outline-dark";
-      c7.innerHTML = "자세히 보기";
-      c7.onclick = () => {
-        this.getHouse(house);
-      };
-      c3.appendChild(c7);
 
-      overlay.setContent(content);
+        // 커스텀 오버레이
+        let content = document.createElement("div");
+        content.className = "wrap";
+        let c1 = document.createElement("div");
+        c1.className = "info";
+        content.appendChild(c1);
+        let c2 = document.createElement("div");
+        c2.className = "title";
+        c2.innerHTML = house.aptName;
+        c1.appendChild(c2);
+        let closeBtn = document.createElement("button");
+        closeBtn.className = "close";
+        // x 버튼 클릭시 커스텀 오버레이 창닫기
+        closeBtn.onclick = () => {
+          overlay.setMap(null);
+        };
+        c2.appendChild(closeBtn);
+        let c3 = document.createElement("div");
+        c3.className = "body";
+        c1.appendChild(c3);
+        let c4 = document.createElement("div");
+        c4.className = "desc";
+        c4.innerHTML =
+          "주소 : " +
+          house.sidoName +
+          " " +
+          house.gugunName +
+          " " +
+          house.dongName +
+          " " +
+          house.jibun;
+        c3.appendChild(c4);
+        let c5 = document.createElement("div");
+        c5.className = "desc";
+        c5.innerHTML = "건축년도 : " + house.buildYear + "년";
+        c3.appendChild(c5);
+        let c6 = document.createElement("div");
+        c6.className = "desc";
+        c6.innerHTML = "최근 매매가 : " + house.recentPrice + "만원";
+        c3.appendChild(c6);
+        let c7 = document.createElement("button");
+        c7.className = "btn-sm btn-outline-dark";
+        c7.innerHTML = "자세히 보기";
+        c7.onclick = () => {
+          this.getHouse(house);
+        };
+        c3.appendChild(c7);
 
-      // 마커를 클릭했을 때 커스텀 오버레이를 표시합니다
-      kakao.maps.event.addListener(marker, "click", () => {
-        overlay.setMap(this.map1);
+        overlay.setContent(content);
+
+        // 마커를 클릭했을 때 커스텀 오버레이를 표시합니다
+        kakao.maps.event.addListener(marker, "click", () => {
+          overlay.setMap(this.map1);
+          this.map1.panTo(moveLatLng);
+        });
+
+        kakao.maps.event.addListener(this.map1, "click", () => {
+          overlay.setMap(null);
+        });
+
+        // 지도 중심좌표를 접속위치로 변경합니다
         this.map1.panTo(moveLatLng);
-      });
+      } else {
+        console.log("api");
+        await this.addressName({
+          dongName: house.법정동.trim(),
+          jibun: house.지번,
+        });
+        let address = this.address;
+        let moveLatLng = "";
+        var geocoder = new kakao.maps.services.Geocoder();
+        geocoder.addressSearch(address, (result, status) => {
 
-      kakao.maps.event.addListener(this.map1, "click", () => {
-        overlay.setMap(null);
-      });
+          // 정상적으로 검색이 완료됐으면
+          if (status === kakao.maps.services.Status.OK) {
+            // 이동할 위도 경도 위치를 생성합니다
+            moveLatLng = new kakao.maps.LatLng(result[0].y, result[0].x);
+            // console.log(moveLatLng);
+            // 마커 생성
+            let marker = new kakao.maps.Marker({
+              map: this.map1,
+              position: moveLatLng,
+              clickable: true,
+            });
 
-      // 지도 중심좌표를 접속위치로 변경합니다
-      this.map1.panTo(moveLatLng);
+            house.lat = result[0].y;
+            house.lng = result[0].x;
+
+            // marker 배열에 넣기
+            this.markers1.push(marker);
+
+            // 마커 위에 커스텀오버레이를 표시
+            let overlay = new kakao.maps.CustomOverlay({
+              map: this.map1,
+              position: moveLatLng,
+              clickable: true,
+            });
+
+            // 커스텀 오버레이 숨기기
+            overlay.setMap(null);
+
+            // 커스텀 오버레이
+            let content = document.createElement("div");
+            content.className = "wrap";
+            let c1 = document.createElement("div");
+            c1.className = "info";
+            content.appendChild(c1);
+            let c2 = document.createElement("div");
+            c2.className = "title";
+            c2.innerHTML = house.아파트;
+            c1.appendChild(c2);
+            let closeBtn = document.createElement("button");
+            closeBtn.className = "close";
+            // x 버튼 클릭시 커스텀 오버레이 창닫기
+            closeBtn.onclick = () => {
+              overlay.setMap(null);
+            };
+            c2.appendChild(closeBtn);
+            let c3 = document.createElement("div");
+            c3.className = "body";
+            c1.appendChild(c3);
+            let c4 = document.createElement("div");
+            c4.className = "desc";
+            c4.innerHTML = "주소 : " + address;
+            c3.appendChild(c4);
+            let c5 = document.createElement("div");
+            c5.className = "desc";
+            c5.innerHTML = "건축년도 : " + house.건축년도 + "년";
+            c3.appendChild(c5);
+            let c6 = document.createElement("div");
+            c6.className = "desc";
+            c6.innerHTML = "최근 매매가 : " + house.거래금액.trim() + "만원";
+            c3.appendChild(c6);
+            let c7 = document.createElement("button");
+            c7.className = "btn-sm btn-outline-dark";
+            c7.innerHTML = "자세히 보기";
+            c7.onclick = () => {
+              this.getHouse2({houseDeal: house, houseInfo: house});
+              console.log("과연 들어감...?");
+              console.log(house);
+            };
+            c3.appendChild(c7);
+
+            overlay.setContent(content);
+
+            // 마커를 클릭했을 때 커스텀 오버레이를 표시합니다
+            kakao.maps.event.addListener(marker, "click", () => {
+              overlay.setMap(this.map1);
+              this.map1.panTo(moveLatLng);
+            });
+
+            kakao.maps.event.addListener(this.map1, "click", () => {
+              overlay.setMap(null);
+            });
+
+            // 지도 중심좌표를 접속위치로 변경합니다
+            this.map1.panTo(moveLatLng);
+          }
+        });
+      }
     },
   },
 };

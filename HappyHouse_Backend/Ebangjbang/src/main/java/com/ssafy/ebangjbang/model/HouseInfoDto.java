@@ -8,11 +8,13 @@ public class HouseInfoDto {
 	private String dongName;
 	private String sidoName;//
 	private String gugunName;//
+	private String recentPrice;//
 	private String buildYear;
 	private String jibun;
 	private String lat;
 	private String lng;
 	private String img;
+	
 	public String getAptCode() {
 		return aptCode;
 	}
@@ -48,6 +50,12 @@ public class HouseInfoDto {
 	}
 	public void setGugunName(String gugunName) {
 		this.gugunName = gugunName;
+	}
+	public String getRecentPrice() {
+		return recentPrice;
+	}
+	public void setRecentPrice(String recentPrice) {
+		this.recentPrice = recentPrice;
 	}
 	public String getBuildYear() {
 		return buildYear;
