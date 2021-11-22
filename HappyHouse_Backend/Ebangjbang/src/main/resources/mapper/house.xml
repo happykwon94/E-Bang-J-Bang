@@ -59,16 +59,16 @@
 		order by aptName;
 	</select>
 	
-	<select id="getAddressName" parameterType="hashmap" resultType="HouseInfoDto">
+	<select id="getAddressName" parameterType="string" resultType="HouseInfoDto">
 		select *
 		from baseaddress b 
-		where left (dongCode,5) = #{gugunCode} and dongName = #{dongName};
+		where dongName = #{dongName};
 	</select>
 	
 	<select id="getStoreList" parameterType="hashmap" resultType="SeoulStoreDto">
 		select *
 		from seoulstore s 
-		where dongName = #{dongName} and classes = #{classes};
+		where dongName = #{dongName} and classDetail2 in(${classDetail2});
 	</select>
 	
 </mapper>

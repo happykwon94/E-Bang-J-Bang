@@ -53,18 +53,15 @@ public class HouseServiceImpl implements HouseService {
 	}
 
 	@Override
-	public HouseInfoDto getAddressName(String gugunCode, String dongName) throws Exception {
-		HashMap<String, String> map = new HashMap<String, String>();
-		map.put("gugunCode", gugunCode);
-		map.put("dongName", dongName);
-		return sqlSession.getMapper(HouseMapper.class).getAddressName(map);
+	public HouseInfoDto getAddressName(String dongName) throws Exception {
+		return sqlSession.getMapper(HouseMapper.class).getAddressName(dongName);
 	}
 
 	@Override
-	public List<SeoulStoreDto> getStoreList(String dongName, String classes) throws Exception {
+	public List<SeoulStoreDto> getStoreList(String dongName, String classDetail2) throws Exception {
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("dongName", dongName);
-		map.put("classes", classes);
+		map.put("classDetail2", classDetail2);
 		return sqlSession.getMapper(HouseMapper.class).getStoreList(map);
 	}
 }

@@ -37,23 +37,26 @@
           <div class="col-4">건축년도: {{ houseInfo.buildYear }}년</div>
         </div>
       </div>
+      {{ this.foodStore }}
+      {{ this.lifeStore }}
+      {{ this.eduStore }}
       <!-- detail한 map 새로 생성 -->
       <div id="mapwrap">
         <div id="map2" style="width: 100%; height: 350px"></div>
         <!-- 지도 위에 표시될 마커 카테고리 -->
         <div class="category">
           <ul>
-            <li id="coffeeMenu" onclick="changeMarker('coffee')">
+            <li id="coffeeMenu" @click="changeMarker('음식')">
               <span class="ico_comm ico_coffee"></span>
-              커피숍
+              음식
             </li>
-            <li id="storeMenu" onclick="changeMarker('store')">
+            <li id="storeMenu" @click="changeMarker('소매')">
               <span class="ico_comm ico_store"></span>
-              편의점
+              소매
             </li>
-            <li id="carparkMenu" onclick="changeMarker('carpark')">
+            <li id="carparkMenu" @click="changeMarker('교육')">
               <span class="ico_comm ico_carpark"></span>
-              주차장
+              교육
             </li>
           </ul>
         </div>
@@ -83,7 +86,9 @@ export default {
       "eduStore",
     ]),
   },
-  created() {},
+  created() {
+    this.markers = [];
+  },
   mounted() {
     if (window.kakao && window.kakao.maps) {
       this.initMap();
@@ -139,6 +144,33 @@ export default {
 
       // marker 배열에 넣기
       this.markers.push(marker);
+    },
+    changeMarker(classes) {
+      this.markers.forEach((marker) => {
+        marker.setMap(null);
+      });
+      this.markers2 = [];
+      switch (classes) {
+        case "음식":
+          console.log(this.foodStore);
+          this.foodStore.forEach((store) => {
+            this.displayMarker(store);
+          });
+          break;
+        case "소매":
+          this.lifeStore.forEach((store) => {
+            this.displayMarker(store);
+          });
+          break;
+        case "교육":
+          this.eduStore.forEach((store) => {
+            this.displayMarker(store);
+          });
+          break;
+
+        default:
+          break;
+      }
     },
   },
 };

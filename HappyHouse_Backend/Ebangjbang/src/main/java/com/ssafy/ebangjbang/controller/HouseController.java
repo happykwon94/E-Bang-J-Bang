@@ -80,6 +80,7 @@ public class HouseController {
 		if(maxPrice == null) {
 			list = houseService.getAptList(dong);
 		}else {
+			logger.debug("가격검색");
 			list = houseService.getPriceList(dong, maxPrice);
 		}
 		if(list != null) {
@@ -90,9 +91,9 @@ public class HouseController {
 	}
 	
 	@GetMapping("addressName")
-	public ResponseEntity<HouseInfoDto> addressName(@RequestParam("gugunCode") String gugunCode,@RequestParam("dongName") String dongName) throws Exception {
-		HouseInfoDto houseInfoDto = houseService.getAddressName(gugunCode, dongName);
-		
+	public ResponseEntity<HouseInfoDto> addressName(@RequestParam("dongName") String dongName, @RequestParam("jibun") String jibun) throws Exception {
+		HouseInfoDto houseInfoDto = houseService.getAddressName(dongName);
+		houseInfoDto.setJibun(jibun);
 		if(houseInfoDto != null) {
 			return new ResponseEntity<HouseInfoDto>(houseInfoDto, HttpStatus.OK);
 		}else {
@@ -101,9 +102,9 @@ public class HouseController {
 	}
 	
 	@GetMapping("store")
-	public ResponseEntity<List<SeoulStoreDto>> getStoreList(@RequestParam("dongName") String dongName, @RequestParam("classes") String classes) throws Exception {
+	public ResponseEntity<List<SeoulStoreDto>> getStoreList(@RequestParam("dongName") String dongName, @RequestParam("classDetail2") String classDetail2) throws Exception {
 		List<SeoulStoreDto> list;
-		list = houseService.getStoreList(dongName, classes);
+		list = houseService.getStoreList(dongName, classDetail2);
 		
 		if(list != null) {
 			return new ResponseEntity<List<SeoulStoreDto>>(list, HttpStatus.OK);

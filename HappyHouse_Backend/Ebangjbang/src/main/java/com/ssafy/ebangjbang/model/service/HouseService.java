@@ -20,7 +20,7 @@ public interface HouseService {
 
 	List<HouseInfoDto> getPriceList(String dong, String maxPrice) throws Exception;
 
-	HouseInfoDto getAddressName(String gugunCode, String dongName) throws Exception;
+	HouseInfoDto getAddressName(String dongName) throws Exception;
 
-	List<SeoulStoreDto> getStoreList(String dongName, String classes) throws Exception;
+	List<SeoulStoreDto> getStoreList(String dongName, String classDetail2) throws Exception;
 }

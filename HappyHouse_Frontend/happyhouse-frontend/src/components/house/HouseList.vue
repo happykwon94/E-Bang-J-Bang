@@ -2,12 +2,29 @@
   <!-- 주택 정보 -->
   <div id="searchInfo" v-if="houses && houses.length != 0">
     <div class="row aptlist">
-      <div class="col-4 text-left">일련 번호</div>
+      <div class="col-3 text-left">일련번호</div>
       <div class="col text-left">아파트 명</div>
+      <div class="col text-left">가격</div>
     </div>
-    <div class="row" v-for="house in paginatedData" :key="house.aptCode">
-      <div class="col-4 text-left">{{ house.aptCode }}</div>
+    <div
+      class="row"
+      v-for="house in paginatedData"
+      :key="house.aptCode"
+      v-show="!isGetData"
+    >
+      <div class="col-3 text-left">{{ house.aptCode }}</div>
       <div class="col text-left">{{ house.aptName }}</div>
+      <div class="col text-left">{{ house.recentPrice }}</div>
+    </div>
+    <div
+      class="row"
+      v-for="(house,index) in paginatedData"
+      :key="index"
+      v-show="isGetData"
+    >
+      <div class="col-3 text-left">{{ house.일련번호 }}</div>
+      <div class="col text-left">{{ house.아파트 }}</div>
+      <div class="col text-left">{{ house.거래금액 }}</div>
     </div>
     <div class="btn-cover mt-3">
       <button
@@ -49,7 +66,7 @@ export default {
     pageSize: {
       type: Number,
       required: false,
-      default: 18,
+      default: 14,
     },
   },
   methods: {
@@ -61,7 +78,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(houseStore, ["houses"]),
+    ...mapState(houseStore, ["houses", "isGetData"]),
     pageCount() {
       let listLeng = this.houses.length,
         listSize = this.pageSize,
