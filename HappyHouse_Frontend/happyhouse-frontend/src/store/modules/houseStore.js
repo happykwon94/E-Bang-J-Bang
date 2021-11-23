@@ -26,6 +26,7 @@ const houseStore = {
     isGetData: false,
     lat: "",
     lng: "",
+    bookMarkList: [],
   },
   mutations: {
     SET_SIDO_LIST(state, data) {
@@ -98,13 +99,23 @@ const houseStore = {
       console.log("state.isGetData");
       console.log(state.isGetData);
     },
-    SET_ADDRESS_NAME(state, data){
-      state.address = data.sidoName + " " + data.gugunName + " " + data.dongName + " "+ data.jibun;
+    SET_ADDRESS_NAME(state, data) {
+      state.address =
+        data.sidoName +
+        " " +
+        data.gugunName +
+        " " +
+        data.dongName +
+        " " +
+        data.jibun;
       // console.log(state.address);
     },
-    SET_LAT_LNG(state, data){
+    SET_LAT_LNG(state, data) {
       state.lat = data.lat;
       state.lng = data.lng;
+    },
+    SET_BOOKMARK_LIST(state, data){
+      state.bookMarkList = data;
     }
   },
   actions: {
@@ -169,8 +180,8 @@ const houseStore = {
         });
     },
     getHouse({ commit }, house) {
-      console.log("getHouse");
-      console.log("house: " + house);
+      // console.log("getHouse");
+      // console.log("house: " + house);
       const params = { aptCode: house.aptCode };
       http
         .get(`/house/aptInfo`, { params })
@@ -178,14 +189,14 @@ const houseStore = {
           console.log(response.data);
           commit("SET_APT_DEAL", response.data);
           commit("SET_APT_INFO", house);
-          commit("SET_LAT_LNG", {lat: house.lat, lng: house.lng})
+          commit("SET_LAT_LNG", { lat: house.lat, lng: house.lng });
         })
         .catch((error) => {
           console.log(error);
         });
     },
     getHouse2({ commit }, houseApi) {
-      console.log("getHouse2");
+      // console.log("getHouse2");
       commit("SET_APT_DEAL", houseApi.houseDeal);
       commit("SET_APT_INFO", houseApi.houseInfo);
     },
@@ -257,7 +268,7 @@ const houseStore = {
     },
     getAptListPrice({ commit }, search) {
       const params = { dong: search.dongCode, maxPrice: search.price };
-      console.log(search.dongCode + search.price);
+      // console.log(search.dongCode + search.price);
       http
         .get(`/house/aptList`, { params })
         .then((response) => {
@@ -284,7 +295,7 @@ const houseStore = {
       http
         .get(SERVICE_URL, { params })
         .then((response) => {
-          console.log(response.data.response.body.items.item);
+          // console.log(response.data.response.body.items.item);
           commit("SET_GET_DATA", true);
           commit("SET_APT_LIST", response.data.response.body.items.item);
         })
@@ -295,12 +306,47 @@ const houseStore = {
     async addressName({ commit }, dong) {
       const params = {
         dongName: dong.dongName,
-        jibun: dong.jibun
+        jibun: dong.jibun,
       };
       await http
         .get(`/house/addressName`, { params })
         .then((response) => {
           commit("SET_ADDRESS_NAME", response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    setBookMark({ commit }, bookmark) {
+      console.log(bookmark.housedealNo);
+      console.log(bookmark.userNo);
+
+      const newBookMark = {
+        userNo: bookmark.userNo,
+        housedealNo: bookmark.housedealNo,
+      };
+      http
+        .post(`/house/bookMark`, JSON.stringify(newBookMark))
+        .then((response) => {
+          console.log(commit);
+          if (response.data === "SUCCESS") {
+            alert("북마크 등록 성공!");
+          } else {
+            alert("북마크 등록 실패!");
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    getBookMarkList({ commit }, userNo) {
+      // alert("북마크");
+      const params = { userNo: userNo };
+      http
+        .get(`/house/bookMark`, { params })
+        .then((response) => {
+          commit("SET_BOOKMARK_LIST", response.data);
+          console.log(response.data);
         })
         .catch((error) => {
           console.log(error);

@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.ssafy.ebangjbang.model.BookMarkDto;
+import com.ssafy.ebangjbang.model.ClinicDto;
 import com.ssafy.ebangjbang.model.HouseDealDto;
 import com.ssafy.ebangjbang.model.HouseInfoDto;
 import com.ssafy.ebangjbang.model.SeoulStoreDto;
@@ -29,4 +31,10 @@ public interface HouseMapper {
 	HouseInfoDto getAddressName(String dongName) throws SQLException;
 
 	List<SeoulStoreDto> getStoreList(HashMap<String, String> map) throws SQLException;
+
+	List<ClinicDto> getClinicList(String gugunName) throws SQLException;
+
+	int addBookMark(BookMarkDto newBookMark) throws SQLException;
+
+	List<HouseDealDto> getbookMarkerList(String userNo)throws SQLException;
 }

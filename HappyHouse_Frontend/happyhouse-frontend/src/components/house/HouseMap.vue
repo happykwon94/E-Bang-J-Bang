@@ -36,10 +36,12 @@ export default {
       this.markers1 = [];
       if (this.houses) {
         this.houses.forEach((house) => {
-          console.log("1");
           this.displayMarker(house);
         });
       }
+    },
+    lat() {
+      this.map1.panTo(new kakao.maps.LatLng(this.lat, this.lng));
     },
   },
   mounted() {
@@ -58,7 +60,7 @@ export default {
     ...mapActions(houseStore, ["getHouse", "getHouse2", "addressName"]),
     ...mapMutations(houseStore, ["SET_LAT_LNG"]),
     initMap() {
-      console.log("init");
+      // console.log("init");
       //지도를 담을 dom
       const container = document.getElementById("map1");
       var lat, lng, position;
@@ -79,27 +81,20 @@ export default {
         });
         if (this.houses != null) {
           this.houses.forEach((house) => {
-            console.log("2");
             this.displayMarker(house);
           });
-          console.log("여기");
-          if (this.housesDeal == null) {
-            console.log("선택좌표");
-            console.log(this.houseInfo.lat);
-            console.log(this.houseInfo.lng);
-            this.map1.setCenter(
-              new kakao.maps.LatLng(this.houseInfo.lat, this.houseInfo.lng)
-            );
-          }
+        }
+        if (this.housesDeal == null) {
+          this.map1.setCenter(
+            new kakao.maps.LatLng(this.houseInfo.lat, this.houseInfo.lng)
+          );
         }
       });
     },
     //houses가 바뀔 때마다 새로 좌표찍기
     async displayMarker(house) {
       if (!this.isGetData) {
-        console.log("db");
-        // console.log("house");
-        // console.log(house);
+        // console.log("db");
         let moveLatLng = new kakao.maps.LatLng(house.lat, house.lng);
         // console.log(moveLatLng);
         // 마커 생성
@@ -185,7 +180,7 @@ export default {
         // 지도 중심좌표를 접속위치로 변경합니다
         this.map1.panTo(moveLatLng);
       } else {
-        console.log("api");
+        // console.log("api");
         await this.addressName({
           dongName: house.법정동.trim(),
           jibun: house.지번,
@@ -194,7 +189,6 @@ export default {
         let moveLatLng = "";
         var geocoder = new kakao.maps.services.Geocoder();
         geocoder.addressSearch(address, (result, status) => {
-
           // 정상적으로 검색이 완료됐으면
           if (status === kakao.maps.services.Status.OK) {
             // 이동할 위도 경도 위치를 생성합니다
@@ -259,9 +253,7 @@ export default {
             c7.className = "btn-sm btn-outline-dark";
             c7.innerHTML = "자세히 보기";
             c7.onclick = () => {
-              this.getHouse2({houseDeal: house, houseInfo: house});
-              console.log("과연 들어감...?");
-              console.log(house);
+              this.getHouse2({ houseDeal: house, houseInfo: house });
             };
             c3.appendChild(c7);
 
@@ -375,9 +367,6 @@ export default {
   bottom: 0;
   width: 22px;
   height: 12px;
-}
-.info .link {
-  color: #5085bb;
 }
 
 .info-body {

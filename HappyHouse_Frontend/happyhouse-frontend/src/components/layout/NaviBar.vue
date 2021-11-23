@@ -19,6 +19,9 @@
         <li class="nav-item">
           <router-link :to="{ name: 'House' }" class="nav-link">주택</router-link>
         </li>
+        <li class="nav-item">
+          <router-link :to="{ name: 'BookMark' }" class="nav-link" v-if="userInfo">관심목록</router-link>
+        </li>
       </ul>
       <ul class="navbar-nav ml-auto" v-if="!userInfo">
         <li class="nav-item">

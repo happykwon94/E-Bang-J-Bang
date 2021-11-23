@@ -1,5 +1,5 @@
 <template>
-  <div class="detail">
+  <div class="">
     <div class="row-12">
       <div v-if="this.isGetData">
         <div class="row">
@@ -15,21 +15,26 @@
               </li>
             </ul>
           </div>
-          <div class="col">
+          <div class="col-2">
+            <button class="btn btn-outline-primary" @click="moveHouseList">
+              지도보기
+            </button>
+          </div>
+          <div class="col-2">
             <button class="btn btn-outline-primary" @click="moveHouseList">
               지도보기
             </button>
           </div>
         </div>
         <div class="row-12 detail-info">
-          <div class="row">
-            <div class="col-5">
+          <div class="row deal">
+            <div class="col-4">
               주소: {{ houseDeal.도로명 }} {{ houseDeal.지번 }}
             </div>
             <div class="col-3">아파트 이름: {{ houseDeal.아파트 }}</div>
             <div class="col-3">해당층: {{ houseDeal.층 }}층</div>
           </div>
-          <div class="row">
+          <div class="row deal">
             <div class="col-5">
               거래일: {{ houseDeal.년 }}년 {{ houseDeal.월 }}월
               {{ houseDeal.일 }}일
@@ -52,14 +57,21 @@
               </li>
             </ul>
           </div>
-          <div class="col">
-            <button class="btn btn-outline-primary" @click="moveHouseList">
-              지도보기
-            </button>
+          <div class="col" style="margin-left: auto">
+            <div class="row" style="margin-bottom: 5px">
+              <button class="btn btn-outline-primary" @click="moveHouseList">
+                지도보기
+              </button>
+            </div>
+            <div class="row">
+              <button class="btn btn-outline-warning" @click="addBookMarker">
+                관심
+              </button>
+            </div>
           </div>
         </div>
         <div class="row-12 detail-info">
-          <div class="row">
+          <div class="row deal">
             <div class="col-5">
               주소: {{ houseDeal.sidoName }} {{ houseDeal.gugunName }}
               {{ houseDeal.dongName }} {{ houseInfo.jibun }}
@@ -67,7 +79,7 @@
             <div class="col-3">아파트 이름: {{ houseDeal.aptName }}</div>
             <div class="col-3">해당층: {{ houseDeal.floor }}층</div>
           </div>
-          <div class="row">
+          <div class="row deal">
             <div class="col-5">
               거래일: {{ houseDeal.dealYear }}년 {{ houseDeal.dealMonth }}월
               {{ houseDeal.dealDay }}일
@@ -88,7 +100,7 @@
           "
         ></div>
         <!-- 지도 위에 표시될 마커 카테고리 0은 classDtail 1은 class-->
-        <ul id="category">
+        <ul class="category">
           <li id="BK9" @click="selCategory('부동산', '0')">
             <span class="category_bg bank"></span>
             부동산
@@ -125,7 +137,12 @@
             <span class="category_bg store"></span>
             여가
           </li>
+          <li id="CS2" @click="selCategory('여가', '4')">
+            <span class="category_bg store"></span>
+            보건소 (선별진료소)
+          </li>
         </ul>
+        <ul class="category"></ul>
       </div>
     </div>
   </div>
@@ -134,7 +151,9 @@
 <script>
 import { mapActions, mapMutations, mapState } from "vuex";
 const houseStore = "houseStore";
+const userStore = "userStore";
 export default {
+  name: "HouseDetail",
   date() {
     return {
       map2: null,
@@ -160,6 +179,7 @@ export default {
       "everyStore",
       "isGetData",
     ]),
+    ...mapState(userStore, ["userInfo"]),
   },
   mounted() {
     if (window.kakao && window.kakao.maps) {
@@ -177,13 +197,11 @@ export default {
     this.markers2 = [];
   },
   methods: {
-    ...mapActions(houseStore, ["getStoreList"]),
+    ...mapActions(houseStore, ["getStoreList", "setBookMark"]),
     ...mapMutations(houseStore, ["SET_APT_DEAL"]),
     async initMap() {
       //지도를 담을 dom
       const container = document.getElementById("map2");
-      console.log("HouseDetail houseInfo");
-      console.log(this.houseInfo);
       var position = new kakao.maps.LatLng(
         this.houseInfo.lat,
         this.houseInfo.lng
@@ -198,7 +216,7 @@ export default {
         position: position,
       });
       // store array 지정
-      if(!this.isGetData){
+      if (!this.isGetData) {
         await this.getStoreList(this.houseInfo.dongName);
       }
     },
@@ -295,7 +313,6 @@ export default {
       // this.map2.panTo(moveLatLng);
     },
     selCategory(order, orderCnt) {
-      console.log("여기3?");
       this.order = order;
       this.orderCnt = orderCnt;
       this.markers2.forEach((marker) => {
@@ -353,6 +370,12 @@ export default {
           break;
       }
     },
+    addBookMarker() {
+      this.setBookMark({
+        userNo: this.userInfo.no,
+        housedealNo: this.houseDeal.no,
+      });
+    },
   },
 };
 </script>
@@ -363,10 +386,18 @@ ul li {
   float: left;
 }
 
+.infoH {
+  font-weight: bold;
+}
+
 .infoH > li + li {
   padding-left: 28px;
   margin-left: 28px;
   border-left: 1px solid grey;
+}
+
+.infoH {
+  font-size: 23px;
 }
 
 .find-infos {
@@ -375,13 +406,10 @@ ul li {
   /* margin-bottom: 30px; */
 }
 
-.detail {
-  border: 1px solid rgb(149, 149, 149);
-  padding: 30px;
-}
-
 .detail-info {
-  margin-top: 40px;
+  border-top: 1px solid black;
+  margin-top: 20px;
+  padding-top: 20px;
   margin-bottom: 50px;
   margin-left: 22px;
 }
@@ -391,14 +419,14 @@ ul li {
   margin: 0;
   padding: 0;
   font-family: "Malgun Gothic", dotum, "돋움", sans-serif;
-  font-size: 12px;
+  font-size: 11px;
 }
 .map_wrap {
   position: relative;
   width: 100%;
   height: 500px;
 }
-#category {
+.category {
   position: absolute;
   top: 10px;
   left: 10px;
@@ -409,56 +437,56 @@ ul li {
   overflow: hidden;
   z-index: 2;
 }
-#category li {
+.category li {
   float: left;
   list-style: none;
-  width: 50px;
+  width: 60px;
   border-right: 1px solid #acacac;
   padding: 6px 0;
   text-align: center;
   cursor: pointer;
 }
-#category li.on {
+.category li.on {
   background: #eee;
 }
-#category li:hover {
-  background: #ffe6e6;
+.category li:hover {
+  background: #c2d4dcb3;
   border-left: 1px solid #acacac;
   margin-left: -1px;
 }
-#category li:last-child {
+.category li:last-child {
   margin-right: 0;
   border-right: 0;
 }
-#category li span {
+.category li span {
   display: block;
   margin: 0 auto 3px;
   width: 27px;
   height: 28px;
 }
-#category li .category_bg {
+.category li .category_bg {
   background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_category.png)
     no-repeat;
 }
-#category li .bank {
+.category li .bank {
   background-position: -10px 0;
 }
-#category li .mart {
+.category li .mart {
   background-position: -10px -36px;
 }
-#category li .pharmacy {
+.category li .pharmacy {
   background-position: -10px -72px;
 }
-#category li .oil {
+.category li .oil {
   background-position: -10px -108px;
 }
-#category li .cafe {
+.category li .cafe {
   background-position: -10px -144px;
 }
-#category li .store {
+.category li .store {
   background-position: -10px -180px;
 }
-#category li.on .category_bg {
+.category li.on .category_bg {
   background-position-x: -46px;
 }
 .placeinfo_wrap {
@@ -604,9 +632,6 @@ ul li {
   width: 22px;
   height: 12px;
 }
-.info .link {
-  color: #5085bb;
-}
 
 .info-body {
   width: 1000px;
@@ -618,7 +643,10 @@ ul li {
   padding-top: 35px;
   margin-bottom: 35px;
 }
-ul {
-  list-style: none;
+
+.deal {
+  font-size: 13px;
+  padding: 5px;
+  border-bottom: 0.7px solid rgb(218, 218, 218);
 }
 </style>
