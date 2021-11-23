@@ -1,19 +1,19 @@
 <template>
   <div class="login-body container mt-5">
-    <form class="form-login" method="POST" action="/user/login">
+    <form class="form-login">
       <div><h2>로그인</h2></div>
       <hr />
       <div class="login-d">
         <label for="">아이디</label>
-        <input type="text" class="form-control" id="id" name="id" placeholder="ID" required v-model="user.id" />
+        <input type="text" class="form-control" placeholder="ID" v-model="user.id" />
       </div>
       <div class="login-d">
         <label for="">비밀번호</label>
-        <input type="password" class="form-control" id="password" name="password" placeholder="PASSWORD" required v-model="user.password" />
+        <input type="password" class="form-control" placeholder="PASSWORD" v-model="user.password" />
       </div>
       <div>
         <div class="checkbox login-d">
-          <input type="checkbox" id="saveId" name="saveId" />아이디 저장
+          <input type="checkbox" v-model="saveId" />아이디 저장
           <span class="nav-find">
             <router-link to="/user/idfind">아이디 찾기</router-link>
             &nbsp;
@@ -45,6 +45,7 @@ export default {
         id: null,
         password: null,
       },
+      saveId: false,
     };
   },
   computed: {
@@ -58,12 +59,16 @@ export default {
 
       let token = sessionStorage.getItem("access-token");
 
-      console.log(this.isLogin);
-
       if (this.isLogin) {
-        console.log("1");
         await this.getUserInfo(token);
-        console.log("2");
+
+        if (this.saveId === true) {
+          console.log("test");
+          this.$cookies.set("ebjb-save-id", this.user.id);
+        } else {
+          this.$cookies.remove("ebjb-save-id");
+        }
+
         this.$router.push({ name: "Home" });
       } else {
         alert("등록되지 않은 회원입니다.");
@@ -78,6 +83,12 @@ export default {
       // 코드 발급
       this.kakaoSocial();
     },
+  },
+  created() {
+    if (this.$cookies.isKey("ebjb-save-id")) {
+      this.saveId = true;
+      this.user.id = this.$cookies.get("ebjb-save-id");
+    }
   },
 };
 </script>

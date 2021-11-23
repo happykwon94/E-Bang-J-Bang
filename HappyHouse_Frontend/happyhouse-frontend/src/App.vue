@@ -17,12 +17,16 @@ export default {
 </script>
 
 <style>
+@font-face {
+  font-family: "jua";
+  src: url(./fonts/Jua-Regular.ttf);
+}
+
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* text-align: center; */
   color: #2c3e50;
+  margin-bottom: 50px;
 }
 
 #nav {

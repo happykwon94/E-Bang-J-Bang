@@ -14,7 +14,7 @@
           <router-link class="nav-link" :to="{ name: 'Notice' }">공지사항</router-link>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">QnA</a>
+          <router-link class="nav-link" :to="{ name: 'Free' }">자유게시판</router-link>
         </li>
         <li class="nav-item">
           <router-link :to="{ name: 'House' }" class="nav-link">주택</router-link>
@@ -56,16 +56,25 @@ export default {
   methods: {
     ...mapMutations(userStore, ["SET_IS_LOGIN", "SET_USER_INFO"]),
     onClickLogout() {
-      this.SET_IS_LOGIN(false);
-      this.SET_USER_INFO(null);
-      sessionStorage.removeItem("access-token");
-      if (this.$route.path != "/") {
-        this.$router.push({ name: "Home" });
-        alert("로그아웃 되었습니다.");
+      if (confirm("정말 로그아웃 하시겠습니까?")) {
+        this.SET_IS_LOGIN(false);
+        this.SET_USER_INFO(null);
+        sessionStorage.removeItem("access-token");
+        if (this.$route.path != "/") {
+          this.$router.push({ name: "Home" });
+          alert("로그아웃 되었습니다.");
+        }
       }
     },
   },
 };
 </script>
 
-<style></style>
+<style>
+.navbar-brand {
+  font-family: "jua";
+}
+.nav-link {
+  cursor: pointer;
+}
+</style>

@@ -6,19 +6,21 @@
         <input type="hidden" id="notice-no" value="${board.no}" />
         <tr>
           <td style="width: 10%">제목</td>
-          <td style="text-align: left">
-            <span>{{ notice.title }}&nbsp;[{{ notice.hit }}]</span>
+          <td style="text-align: left" colspan="3">
+            <span>{{ free.title }}&nbsp;[{{ free.hit }}]</span>
           </td>
         </tr>
         <tr>
           <td style="width: 10%">작성자</td>
           <td style="text-align: left">
-            <span>{{ notice.writer }}</span>
+            <span>{{ free.writer }}</span>
           </td>
+          <td style="width: 10%">like [{{ free.likeCnt }}]</td>
+          <td style="width: 10%">dislike [{{ free.dislikeCnt }}]</td>
         </tr>
         <tr>
-          <td colspan="2" style="border-top: 1px solid black; padding-top: 10px; text-align: left">
-            <viewer v-if="notice != null" :initialValue="notice.content" height="500px" />
+          <td colspan="4" style="border-top: 1px solid black; padding-top: 10px; text-align: left">
+            <viewer v-if="free != null" :initialValue="free.content" height="500px" />
           </td>
         </tr>
       </table>
@@ -27,26 +29,27 @@
 </template>
 
 <script>
-import { getNotice } from "@/api/notice.js";
+import { getFree } from "@/api/free.js";
 import "@toast-ui/editor/dist/toastui-editor-viewer.css";
 
 import { Viewer } from "@toast-ui/vue-editor";
+
 export default {
-  name: "NoticeBoardView",
+  name: "FreeBoardView",
   data() {
     return {
       no: this.$route.params.no,
-      notice: null,
+      free: null,
     };
   },
   components: {
     viewer: Viewer,
   },
   created() {
-    getNotice(
+    getFree(
       this.no,
       (response) => {
-        this.notice = response.data;
+        this.free = response.data;
       },
       (error) => {
         console.log(error);
