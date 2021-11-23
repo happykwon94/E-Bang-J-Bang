@@ -17,12 +17,13 @@
       >
         <h2 style="color: white"><strong>지역 매물 검색</strong></h2>
         <div class="input-group mb-3">
-          <b-form-select
+          <select
             class="form-control searchbar"
             id="sido"
             v-model="sidoCode"
             @change="gugunList"
           >
+          <option value="" disabled selected hidden>시/도</option>
             <option
               v-for="(sido, index) in sidos"
               :key="index"
@@ -30,13 +31,14 @@
             >
               {{ sido.sidoName }}
             </option>
-          </b-form-select>
+          </select>
           <select
             class="form-control searchbar"
             id="gugun"
             v-model="gugunCode"
             @change="dongList"
           >
+          <option value="" disabled selected hidden >구/군</option>
             <option
               v-for="(gugun, index) in guguns"
               :key="index"
@@ -51,6 +53,7 @@
             v-model="dongCode"
             @change="aptList"
           >
+          <option value="" disabled selected hidden >동</option>
             <option
               v-for="(dong, index) in dongs"
               :key="index"
@@ -59,15 +62,6 @@
               {{ dong.dongName }}
             </option>
           </select>
-          <div class="input-group-append">
-            <button
-              type="button"
-              id="lookMap"
-              class="btn btn-secondary btn-outline-light"
-            >
-              지도보기
-            </button>
-          </div>
         </div>
       </div>
     </div>
@@ -108,7 +102,9 @@ export default {
       this.getDong(this.gugunCode);
     },
     aptList() {
+      // alert("aptList()");
       this.getAptList(this.dongCode);
+      this.$router.push({name: "House"});
     },
   },
   computed: {

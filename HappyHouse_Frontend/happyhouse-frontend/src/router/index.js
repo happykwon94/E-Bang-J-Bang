@@ -7,6 +7,7 @@ import Home from "../views/Home.vue";
 import House from "../views/House.vue";
 import HouseMap from "../components/house/HouseMap.vue";
 import HouseList from "../components/house/HouseList.vue";
+import HouseDetail from "../components/house/HouseDetail.vue";
 
 import NoticeBoard from "@/views/NoticeBoard.vue";
 import NoticeBoardList from "@/components/notice/NoticeBoardList.vue";
@@ -63,6 +64,11 @@ const routes = [
         path: "/houseList",
         name: "HouseList",
         component: HouseList,
+      },
+      {
+        path: "/houseDetail",
+        name: "HouseDetail",
+        component: HouseDetail,
       },
     ],
   },

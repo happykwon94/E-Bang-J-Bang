@@ -26,7 +26,7 @@ public interface HouseMapper {
 
 	List<HouseInfoDto> getPriceList(HashMap<String, Integer> map) throws SQLException;
 
-	HouseInfoDto getAddressName(HashMap<String, String> map) throws SQLException;
+	HouseInfoDto getAddressName(String dongName) throws SQLException;
 
 	List<SeoulStoreDto> getStoreList(HashMap<String, String> map) throws SQLException;
 }
