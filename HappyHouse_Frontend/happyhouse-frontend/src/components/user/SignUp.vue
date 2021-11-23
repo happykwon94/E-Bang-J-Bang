@@ -125,6 +125,8 @@ export default {
       if (this.isValidateId && this.isValidatePW && this.isValidateNickName && this.isValidatePhone && this.isValidateEmail) {
         this.userJoin(this.user);
         if (this.isSignUp) {
+          alert("회원가입 되었습니다.");
+
           this.$router.push({ name: "SignIn" });
         } else {
           alert("회원가입 중 문제가 발생하였습니다.");
