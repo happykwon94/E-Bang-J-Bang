@@ -8,4 +8,5 @@ public interface UserService {
 	public UserDto userInfo(String userid) throws Exception;
 	
 	public boolean signUp(UserDto userDto) throws Exception;
+	public boolean validate(String type, String value);
 }

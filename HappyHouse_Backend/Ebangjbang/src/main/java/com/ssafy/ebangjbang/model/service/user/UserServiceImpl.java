@@ -1,5 +1,8 @@
 package com.ssafy.ebangjbang.model.service.user;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +28,14 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public boolean signUp(UserDto userDto) throws Exception {
 		return mapper.insertUser(userDto) == 1;
+	}
+
+	@Override
+	public boolean validate(String type, String value) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("type", type);
+		map.put("value", value);
+		return mapper.selectUserValidate(map) != 0;
 	}
 	
 	

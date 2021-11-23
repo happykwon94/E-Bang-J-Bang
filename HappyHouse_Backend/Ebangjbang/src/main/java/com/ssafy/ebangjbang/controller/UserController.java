@@ -54,7 +54,6 @@ public class UserController {
 	
 	@PostMapping("/signup")
 	public ResponseEntity<String> signUp(@RequestBody UserDto userDto){
-		System.out.println("please! : " + userDto.getId());
 		
 		try {
 			if(userService.signUp(userDto)) {
@@ -121,6 +120,20 @@ public class UserController {
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 	
+	@GetMapping("/validate/{type}/{value}")
+	public ResponseEntity<String> validate(@PathVariable("type") String type, @PathVariable("value") String value) throws Exception{
+		
+		System.out.println("[type] : " + type);
+		System.out.println("[value] : " + value);
+		// true면 기존의 값이 존재
+		if(!userService.validate(type, value)) {
+			// 유효한 아이디 (사용 가능)
+			return new ResponseEntity<String>(SUCCESS, HttpStatus.ACCEPTED);			
+		} else {
+			return new ResponseEntity<String>(FAIL, HttpStatus.ACCEPTED);						
+		}
+	}
+	
 	
 	// 해당 정보가 있는 지 확인
 	public UserDto getUser(String id) throws Exception {
@@ -129,15 +142,11 @@ public class UserController {
 	
 	@GetMapping("/auth/kakao")
 	 ResponseEntity<Map<String, Object>> kakaoAuthCallBack(@RequestParam("code") String code) throws Exception {
-		
-//		System.out.println("code : " + code); 	
-		
+				
 		OAuthToken token = this.getKakaoAccessToken(code);
 		
 		KakaoProfile profile = getProfile(token.getAccess_token());
-				
-//		System.out.println("카카오 리소스 : " + profile);
-		
+						
 		String id = profile.getKakao_account().getEmail()+"_"+profile.getId();
 		String password = profile.getKakao_account().getEmail()+"_"+profile.getId();
 		

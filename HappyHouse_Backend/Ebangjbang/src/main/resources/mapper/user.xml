@@ -16,6 +16,12 @@
 		where id = #{id}
 	</select>
 	
+	<select id="selectUserValidate" parameterType="map" resultType="Int">
+		select count(*)
+		from user
+		where ${type} = #{value}
+	</select>
+	
 	<insert id="insertUser" parameterType="userDto">
 		insert into user(id, password, nickName, email, phone)
 		values(#{id}, #{password}, #{nickName}, #{email}, #{phone});

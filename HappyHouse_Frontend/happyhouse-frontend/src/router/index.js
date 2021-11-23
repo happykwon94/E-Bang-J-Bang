@@ -1,5 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import store from "@/store/index.js";
+
 import Home from "../views/Home.vue";
 
 import House from "../views/House.vue";
@@ -16,7 +18,31 @@ import SignIn from "@/components/user/SignIn.vue";
 import SignUp from "@/components/user/SignUp.vue";
 import KakaoLogin from "@/components/social/KakaoLogin.vue";
 
+import FreeBoard from "@/views/FreeBoard.vue";
+import FreeBoardList from "@/components/free/FreeBoardList.vue";
+import FreeBoardView from "@/components/free/FreeBoardView.vue";
+import FreeBoardWrite from "@/components/free/FreeBoardWrite.vue";
+
 Vue.use(VueRouter);
+
+const onlyAuthUser = async (to, from, next) => {
+  // store의 모듈을 활용할 수 있도록 설정
+  const checkUserInfo = store.getters["userStore/checkUserInfo"];
+  const getUserInfo = store._actions["userStore/getUserInfo"];
+  let token = sessionStorage.getItem("access-token");
+
+  if (checkUserInfo == null && token) {
+    await getUserInfo(token);
+  }
+
+  if (checkUserInfo === null) {
+    alert("로그인이 필요한 페이지입니다.");
+    router.push({ name: "SignIn" });
+  } else {
+    console.log("허가된 사용자");
+    next();
+  }
+};
 
 const routes = [
   {
@@ -60,7 +86,33 @@ const routes = [
       {
         path: "list/:no",
         name: "NoticeBoardView",
+        beforeEnter: onlyAuthUser,
         component: NoticeBoardView,
+      },
+    ],
+  },
+  {
+    path: "/free",
+    name: "Free",
+    component: FreeBoard,
+    redirect: "/free/list",
+    children: [
+      {
+        path: "list",
+        name: "FreeBoardList",
+        component: FreeBoardList,
+      },
+      {
+        path: "list/:no",
+        name: "FreeBoardView",
+        beforeEnter: onlyAuthUser,
+        component: FreeBoardView,
+      },
+      {
+        path: "write",
+        name: "FreeBoardWrite",
+        beforeEnter: onlyAuthUser,
+        component: FreeBoardWrite,
       },
     ],
   },

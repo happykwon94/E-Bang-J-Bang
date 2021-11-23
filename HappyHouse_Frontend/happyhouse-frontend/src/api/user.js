@@ -22,4 +22,8 @@ async function kakaoLogin(data, success, fail) {
     .catch(fail);
 }
 
-export { login, findById, signUp, kakaoLogin };
+async function validate(type, value, success, fail) {
+  await api.get(`/user/validate/${type}/${value}`).then(success).catch(fail);
+}
+
+export { login, findById, signUp, kakaoLogin, validate };

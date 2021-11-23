@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.ebangjbang.model.mapper.FreeMapper">
+	<select id="selectFreeList" resultType="FreeDto">
+		select no, title, writer, date_format(regTime, '%Y.%m.%d') regTime, hit, likeCnt, dislikeCnt
+		from freeboard
+	</select>
+	
+	<select id="selectFree" parameterType="String" resultType="FreeDto">
+		select no, title, writer, date_format(regTime, '%Y.%m.%d') regTime, content, hit, likeCnt, dislikeCnt
+		from freeboard where no=#{no}
+	</select>
+	
+	<update id="updateHit" parameterType="String">
+		update freeboard
+		set hit = hit + 1
+		where no = #{no}
+	</update>
+	
+	<insert id="insertFree" parameterType="FreeDto">
+		insert into freeboard (title, writer, content)
+		values (#{title}, #{writer}, #{content})
+	</insert>
+	
+	<delete id="deleteFree" parameterType="String">
+		delete from freeboard
+		where no = #{no};
+	</delete>
+	
+</mapper>
