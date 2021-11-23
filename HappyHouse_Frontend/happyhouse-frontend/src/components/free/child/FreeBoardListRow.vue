@@ -2,7 +2,7 @@
   <tr>
     <td scope="col">{{ no }}</td>
     <td scope="col" style="text-align: left">
-      <router-link class="notice" :to="{ name: 'NoticeBoardView', params: { no: no } }">{{ title }} [{{ hit }}]</router-link>
+      <router-link class="notice" :to="{ name: 'FreeBoardView', params: { no: no } }">{{ title }} [{{ hit }}]</router-link>
     </td>
     <td scope="col">{{ writer }}</td>
     <td scope="col">{{ regTime }}</td>
@@ -11,7 +11,7 @@
 
 <script>
 export default {
-  name: "NoticeBoardListRow",
+  name: "FreeBoardListRow",
   props: {
     no: String,
     title: String,
