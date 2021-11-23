@@ -71,4 +71,29 @@
 		where dongName = #{dongName} and classDetail2 in(${classDetail2});
 	</select>
 	
+	<select id="getClinicList" parameterType="string" resultType="ClinicDto">
+		select * 
+		from clinics c
+		where gugunName = #{gugunName};
+	</select>
+	
+	<insert id="addBookMark" parameterType="BookMarkDto">
+		insert into bookmark(userNo, housedealNo)
+		values(#{userNo}, #{housedealNo});
+	</insert>
+	
+	<select id="getbookMarkerList" parameterType="string" resultType="HouseDealDto">
+		select h.*, h2.aptName , h2.dongName, b2.gugunName , b2.sidoName 
+		from user u
+		join bookmark b 
+		on u.`no` = b.userNo 
+		join housedeal h 
+		on b.housedealNo = h.`no` 
+		join houseinfo h2 
+		on h2.aptCode = h.aptCode 
+		join baseaddress b2 
+		on b2.dongName = h2.dongName 
+		where u.`no` = #{userNo};
+	</select>
+	
 </mapper>

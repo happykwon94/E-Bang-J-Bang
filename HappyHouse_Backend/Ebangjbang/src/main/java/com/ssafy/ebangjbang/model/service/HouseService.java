@@ -2,6 +2,8 @@ package com.ssafy.ebangjbang.model.service;
 
 import java.util.List;
 
+import com.ssafy.ebangjbang.model.BookMarkDto;
+import com.ssafy.ebangjbang.model.ClinicDto;
 import com.ssafy.ebangjbang.model.HouseDealDto;
 import com.ssafy.ebangjbang.model.HouseInfoDto;
 import com.ssafy.ebangjbang.model.SeoulStoreDto;
@@ -23,4 +25,10 @@ public interface HouseService {
 	HouseInfoDto getAddressName(String dongName) throws Exception;
 
 	List<SeoulStoreDto> getStoreList(String dongName, String classDetail2) throws Exception;
+
+	List<ClinicDto> getClinicList(String gugunName) throws Exception;
+
+	boolean addBookMark(BookMarkDto newBookMark) throws Exception;
+
+	List<HouseDealDto> getbookMarkerList(String userNo) throws Exception;
 }

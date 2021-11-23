@@ -2,10 +2,10 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 
-import House from "../views/House.vue";
-import HouseMap from "../components/house/HouseMap.vue";
-import HouseList from "../components/house/HouseList.vue";
-import HouseDetail from "../components/house/HouseDetail.vue";
+import House from "@/views/House.vue";
+import HouseMap from "@/components/house/HouseMap.vue";
+import HouseList from "@/components/house/HouseList.vue";
+import HouseDetail from "@/components/house/HouseDetail.vue";
 
 import NoticeBoard from "@/views/NoticeBoard.vue";
 import NoticeBoardList from "@/components/notice/NoticeBoardList.vue";
@@ -15,6 +15,9 @@ import User from "@/views/User.vue";
 import SignIn from "@/components/user/SignIn.vue";
 import SignUp from "@/components/user/SignUp.vue";
 import KakaoLogin from "@/components/social/KakaoLogin.vue";
+
+import BookMark from "@/views/BookMark.vue";
+import BookMarkList from '../components/bookmark/BookMarkList.vue';
 
 Vue.use(VueRouter);
 
@@ -86,6 +89,19 @@ const routes = [
     path: "/social/kakao",
     name: "KakaoLogin",
     component: KakaoLogin,
+  },
+  {
+    path: "/bookmark",
+    name: "BookMark",
+    component: BookMark,
+    redirect: "/bookmark/list",
+    children: [
+      {
+        path: "list",
+        name: "BookMarkList",
+        component: BookMarkList,
+      },
+    ],
   },
 ];
 
