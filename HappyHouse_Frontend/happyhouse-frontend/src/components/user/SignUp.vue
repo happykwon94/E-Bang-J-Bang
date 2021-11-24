@@ -216,9 +216,6 @@ export default {
 </script>
 
 <style>
-* {
-  font-family: "Noto Sans KR", sans-serif;
-}
 
 .login-body {
   width: 500px;

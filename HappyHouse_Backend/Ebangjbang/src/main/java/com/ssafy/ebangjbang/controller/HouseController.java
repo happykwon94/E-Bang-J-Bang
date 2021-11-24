@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -143,11 +144,18 @@ public class HouseController {
 	public ResponseEntity<List<HouseDealDto>> bookMarkerList(@RequestParam("userNo") String userNo) throws Exception {
 		List<HouseDealDto> list;
 		list = houseService.getbookMarkerList(userNo);
-		System.out.println(list.toString());
 		if(list != null) {
 			return new ResponseEntity<List<HouseDealDto>>(list, HttpStatus.OK);
 		}else {
 			return new ResponseEntity<List<HouseDealDto>>(HttpStatus.NO_CONTENT);
 		}
+	}
+	
+	@DeleteMapping("bookMark")
+	private ResponseEntity<String> deleteBookMark(@RequestParam("userNo") String userNo, @RequestParam("aptNo") String aptNo) throws Exception {
+		if(houseService.deleteBookMark(userNo, aptNo)) {
+			return new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
+		}
+		return new ResponseEntity<String>("FAIL", HttpStatus.NO_CONTENT);
 	}
 }

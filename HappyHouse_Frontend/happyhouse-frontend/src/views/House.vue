@@ -1,120 +1,43 @@
 <template>
-  <div>
-    <search-bar />
-    <div class="mr-5 ml-5">
-      <div>
-        <h3 style="font-weight: bold; ">검색 결과</h3>
-        <div class="search row mb-5">
-          <div class="input-group" style="width: 100%">
-            <input
-              type="number"
-              id="maxPrice"
-              class="form-control searchbar"
-              placeholder="최대 매매가(만원)"
-              v-model="price"
-            />
-            <div class="input-group-append" style="margin-right: 30px">
-              <button
-                type="button"
-                class="btn btn-outline-dark"
-                @click="searchPrice"
-              >
-                가격 검색
-              </button>
-            </div>
-            <input
-              type="month"
-              class="form-control searchbar"
-              id="month"
-              v-model="yearMonth"
-            />
-            <div class="input-group-append">
-              <button
-                type="button"
-                class="btn btn-outline-dark"
-                id="btnMonth"
-                @click="searchYearMonth"
-              >
-                연,월 검색
-              </button>
-            </div>
-          </div>
-        </div>
-        <div class="row-12" v-if="this.houseDeal != null">
-          <house-detail />
-        </div>
-        <div class="row-12" v-else>
-          <div class="row">
-            <div class="col-4">
-              <house-list />
-            </div>
-            <div class="col">
-              <house-map />
-            </div>
-          </div>
-        </div>
+  <div class="house">
+    <div class="search-bar-sm-container">
+      <search-bar-sm />
+      <search-bar-sm-2 />
+      <div style="overflow: scroll; height: 470px">
+        <house-list />
       </div>
     </div>
+    <house-map />
   </div>
 </template>
 
 <script>
-import { mapActions, mapMutations, mapState } from "vuex";
-import HouseDetail from "../components/house/HouseDetail.vue";
 import HouseList from "../components/house/HouseList.vue";
 import HouseMap from "../components/house/HouseMap.vue";
-import SearchBar from "../components/layout/SearchBar.vue";
-const houseStore = "houseStore";
+import SearchBarSm from "../components/layout/SearchBarSm.vue";
+import SearchBarSm2 from "../components/layout/SearchBarSm2.vue";
 export default {
   name: "House",
-  data() {
-    return {
-      price: "",
-      yearMonth: "",
-    };
-  },
-  created() {
-    this.price = "";
-  },
   components: {
-    SearchBar,
     HouseMap,
     HouseList,
-    HouseDetail,
+    SearchBarSm,
+    SearchBarSm2,
   },
   computed: {
-    ...mapState(houseStore, ["houses", "houseDeal", "gugunCode", "isGetData"]),
   },
-  methods: {
-    ...mapActions(houseStore, ["getAptListPrice", "getAptListYearMonth"]),
-    ...mapMutations(houseStore, [
-      "SET_APT_LIST",
-      "SET_APT_INFO",
-      "SET_APT_DEAL",
-    ]),
-    searchPrice() {
-      // alert("searchPrice()");
-      // alert(this.price);
-      this.getAptListPrice({
-        dongCode: this.houses[0].dongCode,
-        price: this.price,
-      });
-    },
-    searchYearMonth() {
-      // console.log(this.houses);
-      this.getAptListYearMonth({
-        gugunCode: this.gugunCode,
-        date: this.yearMonth,
-      });
-    },
-  },
+  methods: {},
 };
 </script>
 
 <style>
-.col-8,
-.col {
-  padding: 1px;
-  margin: 1px;
+.search-bar-sm-container {
+  width: 400px;
+  border-right: 1px solid rgb(184, 184, 184);
+  padding: 10px;
+}
+
+.house {
+  display: flex;
 }
 </style>

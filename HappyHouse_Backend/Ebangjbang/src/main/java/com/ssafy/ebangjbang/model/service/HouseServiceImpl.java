@@ -81,4 +81,12 @@ public class HouseServiceImpl implements HouseService {
 	public List<HouseDealDto> getbookMarkerList(String userNo) throws Exception {
 		return sqlSession.getMapper(HouseMapper.class).getbookMarkerList(userNo);
 	}
+
+	@Override
+	public boolean deleteBookMark(String userNo, String aptNo) throws Exception {
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("userNo", userNo);
+		map.put("aptNo", aptNo);
+		return sqlSession.getMapper(HouseMapper.class).deleteBookMark(map) == 1;
+	}
 }
