@@ -9,14 +9,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.ebangjbang.model.BookMarkDto;
+import com.ssafy.ebangjbang.model.ClinicDto;
 import com.ssafy.ebangjbang.model.HouseDealDto;
 import com.ssafy.ebangjbang.model.HouseInfoDto;
 import com.ssafy.ebangjbang.model.SeoulStoreDto;
 import com.ssafy.ebangjbang.model.SidoGugunCodeDto;
+import com.ssafy.ebangjbang.model.Dto.NoticeDto;
 import com.ssafy.ebangjbang.model.service.HouseService;
 
 @RestController
@@ -112,5 +117,37 @@ public class HouseController {
 			return new ResponseEntity<List<SeoulStoreDto>>(HttpStatus.NO_CONTENT);
 		}
 	}
+	
+//	@GetMapping("clinic")
+//	public ResponseEntity<List<ClinicDto>> getClinicList(@RequestParam("gugunName") String gugunName) throws Exception {
+//		List<ClinicDto> list;
+//		list = houseService.getClinicList(gugunName);
+//		System.out.println(list);
+//		if(list != null) {
+//			return new ResponseEntity<List<ClinicDto>>(list, HttpStatus.OK);
+//		}else {
+//			return new ResponseEntity<List<ClinicDto>>(HttpStatus.NO_CONTENT);
+//		}
+//	}
 
+	@PostMapping("bookMark")
+	private ResponseEntity<String> setBookMark(@RequestBody BookMarkDto newBookMark) throws Exception {
+		
+		if(houseService.addBookMark(newBookMark)) {
+			return new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
+		}
+		return new ResponseEntity<String>("FAIL", HttpStatus.NO_CONTENT);
+	}
+	
+	@GetMapping("bookMark")
+	public ResponseEntity<List<HouseDealDto>> bookMarkerList(@RequestParam("userNo") String userNo) throws Exception {
+		List<HouseDealDto> list;
+		list = houseService.getbookMarkerList(userNo);
+		System.out.println(list.toString());
+		if(list != null) {
+			return new ResponseEntity<List<HouseDealDto>>(list, HttpStatus.OK);
+		}else {
+			return new ResponseEntity<List<HouseDealDto>>(HttpStatus.NO_CONTENT);
+		}
+	}
 }

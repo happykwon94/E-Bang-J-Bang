@@ -1,10 +1,10 @@
 <template>
   <div>
     <search-bar />
-    <div class="mb-2 container">
-      <div id="map-container">
-        <h3 style="font-weight: bold">검색 결과</h3>
-        <div class="search row mb-3">
+    <div class="mr-5 ml-5">
+      <div>
+        <h3 style="font-weight: bold; ">검색 결과</h3>
+        <div class="search row mb-5">
           <div class="input-group" style="width: 100%">
             <input
               type="number"
@@ -45,10 +45,10 @@
         </div>
         <div class="row-12" v-else>
           <div class="row">
-            <div class="col">
+            <div class="col-4">
               <house-list />
             </div>
-            <div class="col-8">
+            <div class="col">
               <house-map />
             </div>
           </div>
@@ -93,15 +93,15 @@ export default {
       "SET_APT_DEAL",
     ]),
     searchPrice() {
-      alert("searchPrice()");
-      alert(this.price);
+      // alert("searchPrice()");
+      // alert(this.price);
       this.getAptListPrice({
         dongCode: this.houses[0].dongCode,
         price: this.price,
       });
     },
     searchYearMonth() {
-      console.log(this.houses);
+      // console.log(this.houses);
       this.getAptListYearMonth({
         gugunCode: this.gugunCode,
         date: this.yearMonth,
