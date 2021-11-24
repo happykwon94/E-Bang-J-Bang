@@ -21,8 +21,8 @@
             </button>
           </div>
           <div class="col-2">
-            <button class="btn btn-outline-primary" @click="moveHouseList">
-              지도보기
+            <button class="btn btn-outline-warning" @click="moveHouseList">
+              관심
             </button>
           </div>
         </div>
@@ -371,6 +371,10 @@ export default {
       }
     },
     addBookMarker() {
+      if(!this.userInfo){
+        alert("로그인해주세요");
+        this.$router.push({ name: "SignIn" });
+      }
       this.setBookMark({
         userNo: this.userInfo.no,
         housedealNo: this.houseDeal.no,

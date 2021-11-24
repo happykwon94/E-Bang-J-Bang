@@ -16,21 +16,40 @@ export default {
 };
 </script>
 
-<style>
+<style scope>
+
 @font-face {
   font-family: "jua";
   src: url(./fonts/Jua-Regular.ttf);
+}
+
+@font-face {
+  font-family: "BMHANNAAir";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.0/BMHANNAAir.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap');
+
+
+body {
+    font-family: 'Nanum Gothic', sans-serif;
 }
 
 #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
-  margin-bottom: 50px;
 }
 
 #nav {
   padding: 30px;
+}
+
+nav {
+  height: 50px;
 }
 
 #nav a {
@@ -41,4 +60,5 @@ export default {
 #nav a.router-link-exact-active {
   color: #42b983;
 }
+
 </style>

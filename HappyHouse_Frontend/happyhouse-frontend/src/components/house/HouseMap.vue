@@ -1,14 +1,22 @@
 <template>
   <!-- 지도 -->
   <!-- Kakao Map start -->
-  <div id="map1" style="width: 100%; height: 550px; margin: 0 auto"></div>
+  <div id="map1">
+    <!-- Modal -->
+    <modal-view/>
+  </div>
   <!-- Kakao Map end -->
 </template>
 
 <script language="JavaScript">
 import { mapActions, mapMutations, mapState } from "vuex";
+import ModalView from './modalView.vue';
 const houseStore = "houseStore";
 export default {
+  components: {
+    ModalView 
+  
+   },
   name: "HouseMap",
   data() {
     return {
@@ -41,6 +49,7 @@ export default {
       }
     },
     lat() {
+      this.map1.setLevel(1, { animate: true });
       this.map1.panTo(new kakao.maps.LatLng(this.lat, this.lng));
     },
   },
@@ -158,17 +167,22 @@ export default {
         c6.innerHTML = "최근 매매가 : " + house.recentPrice + "만원";
         c3.appendChild(c6);
         let c7 = document.createElement("button");
+        c7.setAttribute("data-target", "#exampleModalCenter");
+        c7.setAttribute("data-toggle", "modal");
+        c7.setAttribute("type", "button");
         c7.className = "btn-sm btn-outline-dark";
         c7.innerHTML = "자세히 보기";
-        c7.onclick = () => {
-          this.getHouse(house);
-        };
+        // c7.onclick = () => {
+        //   this.getHouse(house);
+        //   // this.$router.push({ name: "HouseDetail" });
+        // };
         c3.appendChild(c7);
 
         overlay.setContent(content);
 
         // 마커를 클릭했을 때 커스텀 오버레이를 표시합니다
         kakao.maps.event.addListener(marker, "click", () => {
+          console.log(house);
           overlay.setMap(this.map1);
           this.map1.panTo(moveLatLng);
         });
@@ -291,6 +305,12 @@ export default {
   font-size: 14px;
   font-weight: bold;
 } */
+
+#map1 {
+  flex-grow: 1;
+  height: 650px;
+  margin: 0 auto;
+}
 
 .wrap {
   position: absolute;

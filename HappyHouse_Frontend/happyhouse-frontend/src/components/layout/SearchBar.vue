@@ -1,10 +1,10 @@
 !
 <template>
-  <div class="main-body container-full" style="margin-bottom: 50px">
+  <div class="main-body" style="margin-bottom: 50px">
     <div
       class="container-fluid"
       :style="{
-        backgroundImage: `url(${require('@/assets/main2.png')})`,
+        backgroundImage: `url(${require('@/assets/test00.png')})`,
         width: '100%',
         backgroundSize: 'cover',
         height: '300px',
@@ -15,7 +15,7 @@
         class="container searchbar fade-in-box"
         style="padding-top: 150px; text-align: center"
       >
-        <h2 style="color: white"><strong>지역 매물 검색</strong></h2>
+        <h2><strong>지역 매물 검색</strong></h2>
         <div class="input-group mb-3">
           <select
             class="form-control searchbar"
@@ -23,7 +23,7 @@
             v-model="sidoCode"
             @change="gugunList"
           >
-          <option value="" disabled selected hidden>시/도</option>
+            <option value="" disabled selected hidden>시/도</option>
             <option
               v-for="(sido, index) in sidos"
               :key="index"
@@ -38,7 +38,7 @@
             v-model="gugunCode"
             @change="dongList"
           >
-          <option value="" disabled selected hidden >구/군</option>
+            <option value="" disabled selected hidden>구/군</option>
             <option
               v-for="(gugun, index) in guguns"
               :key="index"
@@ -53,7 +53,7 @@
             v-model="dongCode"
             @change="aptList"
           >
-          <option value="" disabled selected hidden >동</option>
+            <option value="" disabled selected hidden>동</option>
             <option
               v-for="(dong, index) in dongs"
               :key="index"
@@ -87,24 +87,26 @@ export default {
   },
   methods: {
     ...mapActions(houseStore, ["getSido", "getGugun", "getDong", "getAptList"]),
-    ...mapMutations(houseStore, ["SET_HOUSE"]),
+    ...mapMutations(houseStore, ["SET_HOUSE", "SET_PRICE"]),
     sidoList() {
       // console.log("sidoList")
       this.getSido();
-      // this.SET_HOUSE(null); 왜 안되는거닝,,
     },
     gugunList() {
       // console.log(this.sidoCode);
       this.getGugun(this.sidoCode);
     },
     dongList() {
-      console.log(this.gugunCode);
+      // console.log(this.gugunCode);
       this.getDong(this.gugunCode);
     },
     aptList() {
       // alert("aptList()");
       this.getAptList(this.dongCode);
-      this.$router.push({name: "House"});
+      this.SET_PRICE(null);
+      if(this.$route.name == "Home"){
+        this.$router.push({ name: "House" });
+      }
     },
   },
   computed: {
@@ -113,4 +115,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.searchbar {
+    font-family: "BMHANNAAir";
+}
+</style>
