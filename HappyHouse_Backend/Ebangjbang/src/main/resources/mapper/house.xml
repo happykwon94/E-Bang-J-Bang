@@ -96,4 +96,10 @@
 		where u.`no` = #{userNo};
 	</select>
 	
+	<delete id="deleteBookMark" parameterType="hashmap">
+		delete
+		from bookmark
+		where userNo = #{userNo} and housedealNo = #{aptNo};
+	</delete>
+	
 </mapper>

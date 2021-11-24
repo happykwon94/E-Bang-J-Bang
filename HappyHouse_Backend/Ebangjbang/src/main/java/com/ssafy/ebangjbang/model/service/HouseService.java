@@ -31,4 +31,6 @@ public interface HouseService {
 	boolean addBookMark(BookMarkDto newBookMark) throws Exception;
 
 	List<HouseDealDto> getbookMarkerList(String userNo) throws Exception;
+
+	boolean deleteBookMark(String userNo, String aptNo) throws Exception;
 }

@@ -37,4 +37,6 @@ public interface HouseMapper {
 	int addBookMark(BookMarkDto newBookMark) throws SQLException;
 
 	List<HouseDealDto> getbookMarkerList(String userNo)throws SQLException;
+
+	int deleteBookMark(HashMap<String, String> map) throws SQLException;
 }
