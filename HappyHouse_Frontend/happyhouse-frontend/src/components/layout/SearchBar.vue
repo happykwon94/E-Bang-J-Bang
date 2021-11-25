@@ -89,19 +89,15 @@ export default {
     ...mapActions(houseStore, ["getSido", "getGugun", "getDong", "getAptList"]),
     ...mapMutations(houseStore, ["SET_HOUSE", "SET_PRICE"]),
     sidoList() {
-      // console.log("sidoList")
       this.getSido();
     },
     gugunList() {
-      // console.log(this.sidoCode);
       this.getGugun(this.sidoCode);
     },
     dongList() {
-      // console.log(this.gugunCode);
       this.getDong(this.gugunCode);
     },
     aptList() {
-      // alert("aptList()");
       this.getAptList(this.dongCode);
       this.SET_PRICE(null);
       if (this.$route.name == "Home") {

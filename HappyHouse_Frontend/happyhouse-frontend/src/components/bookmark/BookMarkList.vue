@@ -1,5 +1,5 @@
 <template>
-  <div class="book-mark-list container mt-5">
+  <div class="book-mark-list mb-5">
     <div v-if="showCompare">
       <book-mark-compare v-bind:homes="this.homes" />
     </div>
@@ -8,10 +8,10 @@
       <book-mark-list-row
         v-on:compare-house="compareHouse"
         v-bind="{ bookmark: bookmark, userNo: userInfo.no }"
-        v-for="(bookmark, index) in bookMarkList"
+        v-for="(bookmark, index) in getterBookMarkList"
         :key="index"
       />
-      <div class="mt-5 paging">
+      <!-- <div class="mt-5 paging mb-5">
         <button
           id="pre"
           :disabled="pageNum === 0"
@@ -31,7 +31,7 @@
         >
           다음
         </button>
-      </div>
+      </div> -->
     </div>
     <div v-else>
       <div class="bookmarkBox">비어있습니다.</div>
@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapState, mapGetters } from "vuex";
 import BookMarkCompare from "./BookMarkCompare.vue";
 import BookMarkListRow from "./BookMarkListRow.vue";
 const houseStore = "houseStore";
@@ -60,19 +60,18 @@ export default {
     pageSize: {
       type: Number,
       required: false,
-      default: 9,
+      default: 6,
     },
   },
   created() {
-    console.log("created");
     this.getBookMarkList(this.userInfo.no);
-    // this.homes = new Array();
   },
   computed: {
     ...mapState(houseStore, ["bookMarkList"]),
     ...mapState(userStore, ["userInfo"]),
+    ...mapGetters(houseStore, ["getterBookMarkList"]),
     pageCount() {
-      let listLeng = this.bookMarkList.length,
+      let listLeng = this.getterBookMarkList.length,
         listSize = this.pageSize,
         page = Math.floor(listLeng / listSize);
       if (listLeng % listSize > 0) page += 1;
@@ -81,7 +80,7 @@ export default {
     paginatedData() {
       const start = this.pageNum * this.pageSize,
         end = start + this.pageSize;
-      return this.bookMarkList.slice(start, end);
+      return this.getterBookMarkList.slice(start, end);
     },
   },
   methods: {
@@ -109,9 +108,10 @@ export default {
       } else {
         this.homes.push(bookmark);
       }
-      console.log(this.homes);
       if (this.homes.length == 2) {
         this.compare(true);
+      } else if (this.homes.length < 2) {
+        this.compare(false);
       } else {
         alert("비교하기는 두개 선택해주세요!");
         this.compare(false);
@@ -143,4 +143,5 @@ export default {
 .page-btn {
   margin-right: 20px;
 }
+
 </style>
