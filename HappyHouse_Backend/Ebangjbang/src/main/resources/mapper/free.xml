@@ -18,6 +18,14 @@
 		set hit = hit + 1
 		where no = #{no}
 	</update>
+
+	<update id="updateFree" parameterType="FreeDto">
+		update freeboard
+		set writer = #{writer},
+		content = #{content},
+		regTime = current_timestamp
+		where no = #{no}
+	</update>
 	
 	<insert id="insertFree" parameterType="FreeDto">
 		insert into freeboard (title, writer, content)

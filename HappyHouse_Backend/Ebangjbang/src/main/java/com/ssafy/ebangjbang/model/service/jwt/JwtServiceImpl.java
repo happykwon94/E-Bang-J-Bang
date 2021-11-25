@@ -48,7 +48,7 @@ public class JwtServiceImpl implements JwtService{
 	}
 	
 	@Override
-	public <T> String create(T id, T nickName, String subject) {
+	public <T> String create(T id, T nickName, T auth, String subject) {
 		String jwt = Jwts.builder()
 				.setHeaderParam("typ", "JWT")	// typ : 토큰의 타입이 JWT임을 지정
 				.setHeaderParam("regDate", System.currentTimeMillis()) // 헤더에 담을 정보
@@ -56,6 +56,7 @@ public class JwtServiceImpl implements JwtService{
 				.setSubject(subject)	// 등록된 클레임에 담을 정보
 				.claim("id", id)	// 클레임에 기본 등록된 정보 외에 토큰에 담을 정보 세팅
 				.claim("nickName", nickName)
+				.claim("auth", auth)
 				.signWith(SignatureAlgorithm.HS256, this.generateKey())	// 데이터의 위변조 증명
 				.compact(); //JWT 키로 생성
 		return jwt;

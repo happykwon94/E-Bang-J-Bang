@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.ebangjbang.model.mapper.AdminMapper">
+	<select id="selectFreeList" resultType="FreeDto">
+		select no, title, writer, date_format(regTime, '%Y.%m.%d') regTime, hit, likeCnt, dislikeCnt
+		from freeboard
+	</select>
+	
+	<select id="selectUserList" resultType="userDto">
+		select u.nickName nickName, u.id id, u.email email, u.phone phone, date_format(regTime, '%Y.%m.%d') regTime, a.role auth, u.type type
+		from user u, auth a
+		where u.auth = a.auth
+		and u.auth != 30
+	</select>
+	
+	<delete id="deleteUser" parameterType="String">
+		delete from user
+		where id = #{id}
+	</delete>
+	
+	
+</mapper>

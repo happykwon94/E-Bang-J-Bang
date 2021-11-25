@@ -13,12 +13,18 @@
         <notice-board-list-row v-for="(notice, idx) in notices" :key="idx" v-bind="notice"></notice-board-list-row>
       </tbody>
     </table>
+    <div>
+      <button v-if="userInfo != null && userInfo.auth >= 20" type="button" class="btn btn-outline-success col-2" @click="moveWriteForm">공지사항 작성</button>
+    </div>
   </div>
 </template>
 
 <script>
 import NoticeBoardListRow from "@/components/notice/child/NoticeBoardListRow.vue";
 import { listNotice } from "@/api/notice.js";
+import { mapState } from "vuex";
+
+const userStore = "userStore";
 
 export default {
   name: "NoticeBoardList",
@@ -30,6 +36,9 @@ export default {
   components: {
     NoticeBoardListRow,
   },
+  computed: {
+    ...mapState(userStore, ["isLogin", "userInfo"]),
+  },
   created() {
     listNotice(
       (response) => {
@@ -39,6 +48,11 @@ export default {
         console.log(error);
       }
     );
+  },
+  methods: {
+    moveWriteForm() {
+      this.$router.push({ name: "NoticeBoardWrite" });
+    },
   },
 };
 </script>

@@ -9,18 +9,20 @@
           <th scope="col">작성일</th>
         </tr>
       </thead>
-      <tbody id="tableBody">
+      <tbody id="tableBody " v-if="freeBoardList.length != 0">
         <free-board-list-row v-for="(freeBoard, idx) in freeBoardList" :key="idx" v-bind="freeBoard"></free-board-list-row>
       </tbody>
     </table>
-    <button type="button" class="btn btn-primary" @click="moveWriteForm">글 쓰기</button>
+    <button type="button" class="btn btn-outline-success" @click="moveWriteForm">글 쓰기</button>
   </div>
 </template>
 
 <script>
 import FreeBoardListRow from "@/components/free/child/FreeBoardListRow.vue";
 import { listFree } from "@/api/free.js";
+import { mapState } from "vuex";
 
+const userStore = "userStore";
 export default {
   name: "FreeBoardList",
   data() {
@@ -31,9 +33,12 @@ export default {
   components: {
     FreeBoardListRow,
   },
+  computed: {
+    ...mapState(userStore, ["isLogin", "userInfo"]),
+  },
   methods: {
     moveWriteForm() {
-      this.$router.push({ name: "FreeBoardWrite" });
+      this.$router.push({ name: "FreeBoardWrite", params: { type: "regist" } });
     },
   },
   created() {
