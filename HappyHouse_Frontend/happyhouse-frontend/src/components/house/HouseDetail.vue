@@ -44,7 +44,19 @@
             <ul class="infoH">
               <li>
                 <p>거래금액</p>
-                <div id="price">{{ houseDeal.dealAmount }}</div>
+                <!-- {{ houesDeal.dealAmount }} -->
+                <div id="price">
+                  {{
+                    houseDeal.dealAmount
+                      .replace(/,/g, "")
+                      .slice(0, houseDeal.dealAmount.length - 5)
+                  }}.{{
+                    houseDeal.dealAmount
+                      .replace(/,/g, "")
+                      .slice(-4)
+                      .replace(/0/gi, "")
+                  }}억
+                </div>
               </li>
               <li>
                 <p>전용면적</p>
@@ -150,17 +162,16 @@ export default {
       /* global kakao */
       script.onload = () => kakao.maps.load(this.initMap);
       script.src =
-        "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=e3f5368c16f60513648c83fa8b24274d&libraries=services";
+        `//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=${process.env.VUE_APP_KAKAO_MAP_JS_KEY}&libraries=services`;
       document.head.appendChild(script);
       this.loadMap = true;
     }
   },
   created() {
     this.markers2 = [];
-    // console.log("선택한 집");
-    // console.log(3);
-    // console.log(this.houseDeal);
-    this.getHouse({ aptCode: this.aptCode });
+    if(!this.isGetData){
+      this.getHouse({ aptCode: this.aptCode });
+    }
   },
   methods: {
     ...mapActions(houseStore, ["getStoreList", "setBookMark", "getHouse"]),
@@ -303,7 +314,7 @@ export default {
       content.appendChild(c1);
       let c2 = document.createElement("div");
       c2.className = "title";
-      c2.innerHTML = store.storeName;
+      c2.innerHTML = store.place_name;
       c1.appendChild(c2);
       let closeBtn = document.createElement("button");
       closeBtn.className = "close";
@@ -321,10 +332,10 @@ export default {
       c3.appendChild(c4);
       let c5 = document.createElement("div");
       c5.className = "desc";
-      c5.innerHTML = "가게명 : " + store.place_name;
+      c5.innerHTML = "전화번호 : " + store.phone;
       c3.appendChild(c5);
       let c7 = document.createElement("button");
-      c7.className = "btn-sm btn-outline-dark";
+      c7.className = "btn-sm btn-outline btn btn-detail";
       c7.innerHTML = "kakao 검색";
       c7.onclick = () => {
         window.open(store.place_url);
@@ -505,5 +516,14 @@ ul li {
   font-size: 13px;
   padding: 5px;
   border-bottom: 0.7px solid rgb(218, 218, 218);
+}
+
+.info .btn-detail {
+  color: #42b983;
+}
+
+.info .btn-detail:hover {
+  background-color: #42b983;
+  color: white;
 }
 </style>

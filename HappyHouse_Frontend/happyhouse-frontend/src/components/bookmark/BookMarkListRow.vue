@@ -1,5 +1,5 @@
 <template>
-  <div class="bookmarkBox row">
+  <div class="bookmarkBox row" style="align-items: center">
     <div class="form-check">
       <label class="form-check-label">
         <input
@@ -53,6 +53,7 @@
     <div class="col">
       <div class="row" style="padding-bottom: 15px">
         <router-link
+          style="color: #42b983"
           :to="{ name: 'HouseDetail', params: { aptCode: bookmark.aptCode } }"
           >자세히보기</router-link
         >
@@ -80,15 +81,15 @@ export default {
     };
   },
   methods: {
-    ...mapActions(houseStore, ["deleteBookMark"]),
-    delBookMark(bookMarkInfo) {
-      this.deleteBookMark(bookMarkInfo);
+    ...mapActions(houseStore, ["deleteBookMark", "getBookMarkList"]),
+    async delBookMark(bookMarkInfo) {
+      await this.deleteBookMark(bookMarkInfo);
+      this.getBookMarkList(bookMarkInfo.userNo);
     },
     moveList(bookmark) {
       this.$emit("compare-house", bookmark);
     },
   },
-  computed() {},
 };
 </script>
 

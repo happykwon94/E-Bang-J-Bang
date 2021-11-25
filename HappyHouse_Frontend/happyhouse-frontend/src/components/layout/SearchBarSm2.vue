@@ -65,13 +65,8 @@ export default {
     searchPrice() {
       this.SET_PRICE(this.price);
 
-      // this.getAptListPrice({
-      //   dongCode: this.houses[0].dongCode,
-      //   price: this.price,
-      // });
     },
     searchYearMonth() {
-      // console.log(this.houses);
       this.getAptListYearMonth({
         gugunCode: this.gugunCode,
         date: this.yearMonth,
