@@ -26,4 +26,12 @@ async function validate(type, value, success, fail) {
   await api.get(`/user/validate/${type}/${value}`).then(success).catch(fail);
 }
 
-export { login, findById, signUp, kakaoLogin, validate };
+async function modifyUser(user, success, fail) {
+  await api.put(`/user`, JSON.stringify(user)).then(success).catch(fail);
+}
+
+async function resignUser(id, success, fail) {
+  await api.delete(`/user/${id}`).then(success).catch(fail);
+}
+
+export { login, findById, signUp, kakaoLogin, validate, modifyUser, resignUser };

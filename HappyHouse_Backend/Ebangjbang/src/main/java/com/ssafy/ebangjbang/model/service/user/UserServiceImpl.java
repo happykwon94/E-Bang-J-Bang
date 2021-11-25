@@ -37,6 +37,16 @@ public class UserServiceImpl implements UserService{
 		map.put("value", value);
 		return mapper.selectUserValidate(map) != 0;
 	}
+
+	@Override
+	public boolean deleteUser(String id) {
+		return mapper.deleteUser(id) == 1;
+	}
+
+	@Override
+	public boolean modifyUser(UserDto userDto) {
+		return mapper.updateUser(userDto) == 1;
+	}
 	
 	
 }

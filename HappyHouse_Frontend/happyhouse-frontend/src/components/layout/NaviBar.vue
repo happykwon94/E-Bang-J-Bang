@@ -18,10 +18,10 @@
           <router-link class="nav-link" :to="{ name: 'FreeBoardList' }">자유게시판</router-link>
         </li>
         <li class="nav-item">
-          <router-link class="nav-link" :to="{ name: 'House' }">주택</router-link>
+          <router-link class="nav-link" :to="{ name: 'HouseView' }">주택</router-link>
         </li>
         <li class="nav-item">
-          <router-link :to="{ name: 'BookMark' }" class="nav-link" v-if="userInfo">관심목록</router-link>
+          <router-link :to="{ name: 'BookMarkList' }" class="nav-link" v-if="userInfo">관심목록</router-link>
         </li>
       </ul>
       <ul class="navbar-nav ml-auto" v-if="!userInfo">
@@ -43,7 +43,7 @@
           >
         </li>
         <li class="nav-item">
-          <router-link class="nav-link" :to="{ name: 'SignIn' }">{{ userInfo.nickName }}({{ userInfo.id }})</router-link>
+          <router-link class="nav-link" :to="{ name: 'ModifyUser' }">{{ userInfo.nickName }}({{ userInfo.id }})</router-link>
         </li>
         <li class="nav-item">
           <span class="nav-link" @click="onClickLogout">로그아웃</span>

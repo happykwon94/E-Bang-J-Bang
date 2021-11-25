@@ -14,7 +14,6 @@ const userStore = "userStore";
 export default {
   name: "KakaoLogin",
   created() {
-    alert("들어왔다");
     this.login();
   },
   computed: {

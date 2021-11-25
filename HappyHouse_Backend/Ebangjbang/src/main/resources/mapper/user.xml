@@ -23,8 +23,21 @@
 	</select>
 	
 	<insert id="insertUser" parameterType="userDto">
-		insert into user(id, password, nickName, email, phone)
-		values(#{id}, #{password}, #{nickName}, #{email}, #{phone});
+		insert into user(id, password, nickName, email, phone, type)
+		values(#{id}, #{password}, #{nickName}, #{email}, #{phone}, #{type});
 	</insert>
 	
+	<update id="updateUser" parameterType="userDto">
+		update user
+		set nickName = #{nickName},
+		password = #{password},
+		regTime = current_timestamp,
+		email = #{email}
+		where id = #{id}
+	</update>
+	
+	<delete id="deleteUser" parameterType="String">
+		delete from user
+		where id = #{id};
+	</delete>
 </mapper>

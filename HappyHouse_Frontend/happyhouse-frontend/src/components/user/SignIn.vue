@@ -12,14 +12,7 @@
         <input type="password" class="form-control" placeholder="PASSWORD" v-model="user.password" />
       </div>
       <div>
-        <div class="checkbox login-d">
-          <input type="checkbox" v-model="saveId" />아이디 저장
-          <span class="nav-find">
-            <router-link to="/user/idfind">아이디 찾기</router-link>
-            &nbsp;
-            <router-link to="/user/passwordfind">비밀번호 찾기</router-link>
-          </span>
-        </div>
+        <div class="checkbox login-d"><input type="checkbox" v-model="saveId" />아이디 저장</div>
         <div>
           <button type="button" class="btn btn-primary" id="loginBtn" @click="confirm">로그인</button>
         </div>
@@ -63,7 +56,6 @@ export default {
         await this.getUserInfo(token);
 
         if (this.saveId === true) {
-          console.log("test");
           this.$cookies.set("ebjb-save-id", this.user.id);
         } else {
           this.$cookies.remove("ebjb-save-id");

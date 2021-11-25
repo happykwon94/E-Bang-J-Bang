@@ -9,4 +9,6 @@ public interface UserService {
 	
 	public boolean signUp(UserDto userDto) throws Exception;
 	public boolean validate(String type, String value);
+	public boolean deleteUser(String id);
+	public boolean modifyUser(UserDto userDto);
 }

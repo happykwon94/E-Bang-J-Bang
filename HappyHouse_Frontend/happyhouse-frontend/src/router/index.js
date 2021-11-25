@@ -17,6 +17,7 @@ import NoticeBoardUpdate from "@/components/notice/NoticeBoardUpdate.vue";
 import User from "@/views/User.vue";
 import SignIn from "@/components/user/SignIn.vue";
 import SignUp from "@/components/user/SignUp.vue";
+import ModifyUser from "@/components/user/ModifyUser.vue";
 import KakaoLogin from "@/components/social/KakaoLogin.vue";
 
 import BookMark from "@/views/BookMark.vue";
@@ -68,7 +69,6 @@ const onlyAuthUser = async (to, from, next) => {
     alert("로그인이 필요한 페이지입니다.");
     router.push({ name: "SignIn" });
   } else {
-    console.log("허가된 사용자");
     next();
   }
 };
@@ -174,6 +174,11 @@ const routes = [
         path: "/signup",
         name: "SignUp",
         component: SignUp,
+      },
+      {
+        path: "/modify",
+        name: "ModifyUser",
+        component: ModifyUser,
       },
     ],
   },

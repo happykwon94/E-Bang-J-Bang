@@ -16,9 +16,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -51,6 +53,35 @@ public class UserController {
 	
 	@Autowired
 	private UserService userService;
+	
+	@PutMapping
+	public ResponseEntity<String> modifyUser(@RequestBody UserDto userDto){
+				
+		try {
+			if(userService.modifyUser(userDto)) {
+				return new ResponseEntity<String>(SUCCESS, HttpStatus.ACCEPTED);				
+			} else {
+				return new ResponseEntity<String>(FAIL, HttpStatus.ACCEPTED);				
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
+		}
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<String> deleteUser(@PathVariable("id") String id){
+		try {
+			if(userService.deleteUser(id)) {
+				return new ResponseEntity<String>(SUCCESS, HttpStatus.ACCEPTED);				
+			} else {
+				return new ResponseEntity<String>(FAIL, HttpStatus.ACCEPTED);				
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
+		}
+	}
 	
 	@PostMapping("/signup")
 	public ResponseEntity<String> signUp(@RequestBody UserDto userDto){
@@ -162,7 +193,8 @@ public class UserController {
 			user.setPassword(password);
 			user.setEmail(profile.getKakao_account().getEmail());
 			user.setNickName(profile.getProperties().getNickname());
-			
+			user.setType("kakao");
+
 			this.signUp(user);
 		}
 				
