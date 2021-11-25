@@ -13,4 +13,6 @@ public interface UserMapper {
 	public UserDto userInfo(String userid) throws SQLException;
 	public int insertUser(UserDto userDto) throws SQLException;
 	public int selectUserValidate(Map<String, Object> map);
+	public int deleteUser(String id);
+	public int updateUser(UserDto userDto);
 }

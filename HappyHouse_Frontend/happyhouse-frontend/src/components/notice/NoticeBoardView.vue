@@ -27,8 +27,8 @@
 
             <tr>
               <td colspan="6" class="text-center">
-                <input type="button" class="btn btn-outline-danger" @click="deleteNoticeMethod" value="삭제하기" />
-                <input type="button" class="btn btn-outline-warning" @click="moveModifyForm" value="수정하기" />
+                <input type="button" class="btn btn-outline-danger" v-if="userInfo.auth >= 20" @click="deleteNoticeMethod" value="삭제하기" />
+                <input type="button" class="btn btn-outline-warning" v-if="userInfo.auth >= 20" @click="moveModifyForm" value="수정하기" />
                 <button type="button" class="btn btn-outline-primary" @click="moveList">목록으로</button>
               </td>
             </tr>
@@ -42,6 +42,8 @@
 <script>
 import { getNotice, deleteNotice } from "@/api/notice.js";
 import "@toast-ui/editor/dist/toastui-editor-viewer.css";
+import { mapState } from "vuex";
+const userStore = "userStore";
 
 import { Viewer } from "@toast-ui/vue-editor";
 export default {
@@ -54,6 +56,9 @@ export default {
   },
   components: {
     viewer: Viewer,
+  },
+  computed: {
+    ...mapState(userStore, ["userInfo"]),
   },
   created() {
     getNotice(

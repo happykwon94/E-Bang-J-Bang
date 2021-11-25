@@ -1,5 +1,5 @@
 <template>
-  <div class="login-body container mt-5">
+  <div class="login-body container mt-5 mb-5">
     <form class="form-signin">
       <div><h2>회원가입</h2></div>
       <div class="">
@@ -84,7 +84,6 @@ export default {
       }
     },
     "user.phone": function (val) {
-      console.log(val);
       const reg = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
 
       if (val.length == 0) {
