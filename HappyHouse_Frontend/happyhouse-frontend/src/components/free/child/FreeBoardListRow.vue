@@ -1,15 +1,18 @@
 <template>
   <tr>
-    <td scope="col">{{ no }}</td>
-    <td scope="col" style="text-align: left">
+    <td style="vertical-align: middle" scope="col">{{ no }}</td>
+    <td scope="col" style="text-align: left; vertical-align: middle">
       <router-link class="notice" :to="{ name: 'FreeBoardView', params: { no: no } }">{{ title }} [{{ hit }}]</router-link>
     </td>
-    <td scope="col">{{ writer }}</td>
-    <td scope="col">{{ regTime }}</td>
+    <td style="vertical-align: middle" scope="col">{{ writer }}</td>
+    <td style="vertical-align: middle" scope="col">{{ regTime }}</td>
   </tr>
 </template>
 
 <script>
+import { mapState } from "vuex";
+
+const userStore = "userStore";
 export default {
   name: "FreeBoardListRow",
   props: {
@@ -19,7 +22,10 @@ export default {
     hit: String,
     regTime: String,
   },
+  computed: {
+    ...mapState(userStore, ["isLogin", "userInfo"]),
+  },
 };
 </script>
 
-<style></style>
+<style scoped></style>

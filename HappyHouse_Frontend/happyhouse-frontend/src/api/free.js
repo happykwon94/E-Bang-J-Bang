@@ -14,4 +14,11 @@ function registFree(free, success, fail) {
   ebjbAPI.post(`/free`, JSON.stringify(free)).then(success).catch(fail);
 }
 
-export { listFree, getFree, registFree };
+async function deleteFree(no, success, fail) {
+  await ebjbAPI.delete(`/free/${no}`).then(success).catch(fail);
+}
+function modifyFree(free, success, fail) {
+  ebjbAPI.put(`/free`, JSON.stringify(free)).then(success).catch(fail);
+}
+
+export { listFree, getFree, registFree, deleteFree, modifyFree };

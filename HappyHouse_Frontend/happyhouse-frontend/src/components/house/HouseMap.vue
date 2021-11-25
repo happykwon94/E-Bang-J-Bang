@@ -3,20 +3,19 @@
   <!-- Kakao Map start -->
   <div id="map1">
     <!-- Modal -->
-    <modal-view/>
+    <modal-view />
   </div>
   <!-- Kakao Map end -->
 </template>
 
 <script language="JavaScript">
 import { mapActions, mapMutations, mapState } from "vuex";
-import ModalView from './modalView.vue';
+import ModalView from "./modalView.vue";
 const houseStore = "houseStore";
 export default {
   components: {
-    ModalView 
-  
-   },
+    ModalView,
+  },
   name: "HouseMap",
   data() {
     return {
@@ -26,15 +25,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(houseStore, [
-      "houses",
-      "houseInfo",
-      "isGetData",
-      "gugunCode",
-      "address",
-      "lat",
-      "lng",
-    ]),
+    ...mapState(houseStore, ["houses", "houseInfo", "isGetData", "gugunCode", "address", "lat", "lng"]),
   },
   watch: {
     houses() {
@@ -60,8 +51,7 @@ export default {
       const script = document.createElement("script");
       /* global kakao */
       script.onload = () => kakao.maps.load(this.initMap);
-      script.src =
-        "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=e3f5368c16f60513648c83fa8b24274d&libraries=services";
+      script.src = "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=e3f5368c16f60513648c83fa8b24274d&libraries=services";
       document.head.appendChild(script);
     }
   },
@@ -94,9 +84,7 @@ export default {
           });
         }
         if (this.housesDeal == null) {
-          this.map1.setCenter(
-            new kakao.maps.LatLng(this.houseInfo.lat, this.houseInfo.lng)
-          );
+          this.map1.setCenter(new kakao.maps.LatLng(this.houseInfo.lat, this.houseInfo.lng));
         }
       });
     },
@@ -105,11 +93,20 @@ export default {
       if (!this.isGetData) {
         // console.log("db");
         let moveLatLng = new kakao.maps.LatLng(house.lat, house.lng);
+
+        var imageSrc = require("@/assets/marker.png"), // 마커이미지의 주소입니다
+          imageSize = new kakao.maps.Size(64, 69), // 마커이미지의 크기입니다
+          imageOption = { offset: new kakao.maps.Point(27, 69) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+
+        // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
+        var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
+
         // console.log(moveLatLng);
         // 마커 생성
         let marker = new kakao.maps.Marker({
           map: this.map1,
           position: moveLatLng,
+          image: markerImage,
           clickable: true,
         });
 
@@ -148,15 +145,7 @@ export default {
         c1.appendChild(c3);
         let c4 = document.createElement("div");
         c4.className = "desc";
-        c4.innerHTML =
-          "주소 : " +
-          house.sidoName +
-          " " +
-          house.gugunName +
-          " " +
-          house.dongName +
-          " " +
-          house.jibun;
+        c4.innerHTML = "주소 : " + house.sidoName + " " + house.gugunName + " " + house.dongName + " " + house.jibun;
         c3.appendChild(c4);
         let c5 = document.createElement("div");
         c5.className = "desc";
@@ -167,15 +156,19 @@ export default {
         c6.innerHTML = "최근 매매가 : " + house.recentPrice + "만원";
         c3.appendChild(c6);
         let c7 = document.createElement("button");
-        c7.setAttribute("data-target", "#exampleModalCenter");
-        c7.setAttribute("data-toggle", "modal");
+        // c7.setAttribute("data-target", "#exampleModalCenter");
+        // c7.setAttribute("data-toggle", "modal");
+        // c7.setAttribute("id", "show-modal");
         c7.setAttribute("type", "button");
+        // c7.setAttribute("v-on:click", "showModal = true");
         c7.className = "btn-sm btn-outline-dark";
         c7.innerHTML = "자세히 보기";
-        // c7.onclick = () => {
-        //   this.getHouse(house);
-        //   // this.$router.push({ name: "HouseDetail" });
-        // };
+        c7.onclick = () => {
+          this.getHouse(house);
+          // console.log("getHouse");
+          // console.log();
+          this.$router.push({ name: "HouseDetail" });
+        };
         c3.appendChild(c7);
 
         overlay.setContent(content);

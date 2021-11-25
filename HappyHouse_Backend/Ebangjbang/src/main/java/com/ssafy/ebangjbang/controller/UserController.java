@@ -77,7 +77,7 @@ public class UserController {
 			UserDto loginUser = userService.login(userDto);
 						
 			if (loginUser != null) {
-				String token = jwtService.create(loginUser.getId(), loginUser.getNickName(), "access-token");// key, data, subject
+				String token = jwtService.create(loginUser.getId(), loginUser.getNickName(), loginUser.getAuth(), "access-token");// key, data, subject
 				logger.debug("로그인 토큰정보 : {}", token);
 				resultMap.put("access-token", token);
 				resultMap.put("message", SUCCESS);
@@ -123,8 +123,6 @@ public class UserController {
 	@GetMapping("/validate/{type}/{value}")
 	public ResponseEntity<String> validate(@PathVariable("type") String type, @PathVariable("value") String value) throws Exception{
 		
-		System.out.println("[type] : " + type);
-		System.out.println("[value] : " + value);
 		// true면 기존의 값이 존재
 		if(!userService.validate(type, value)) {
 			// 유효한 아이디 (사용 가능)

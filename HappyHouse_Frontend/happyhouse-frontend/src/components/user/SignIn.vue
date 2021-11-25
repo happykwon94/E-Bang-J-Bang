@@ -94,7 +94,6 @@ export default {
 </script>
 
 <style>
-
 #loginBtn {
   width: 100%;
   height: 45px;

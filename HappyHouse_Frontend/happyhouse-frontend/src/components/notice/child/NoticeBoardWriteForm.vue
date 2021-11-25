@@ -2,12 +2,12 @@
   <div>
     <form class="form-notice">
       <div id="notice">
-        <h4 v-if="type === 'regist'">게시글 작성</h4>
-        <h4 v-else>게시글 수정</h4>
+        <h4 v-if="this.type === 'regist'">공지사항 작성</h4>
+        <h4 v-else>공지사항 수정</h4>
         <div class="mt-4" style="width: 100%">
           <div class="mt-3">
             <label for="title">제목</label>
-            <input type="text" id="title" style="width: 100%" v-model="free.title" />
+            <input type="text" id="title" style="width: 100%" v-model="notice.title" />
           </div>
           <div class="mt-3">
             <label for="writer">작성자</label>
@@ -15,13 +15,13 @@
           </div>
           <div class="mt-3">
             <label for="content">내용</label>
-            <editor ref="toastuiEditor" v-if="type === 'modify' && free.content.length != 0" :initialValue="free.content" height="500px" initialEditType="wysiwyg" previewStyle="vertical"></editor>
+            <editor ref="toastuiEditor" v-if="type === 'modify' && notice.content.length != 0" :initialValue="notice.content" height="500px" initialEditType="wysiwyg" previewStyle="vertical"></editor>
             <editor ref="toastuiEditor" v-if="type === 'regist'" height="500px" initialEditType="wysiwyg" previewStyle="vertical"></editor>
           </div>
           <div class="mt-3 mb-3">
             <button type="button" id="regBtn" class="btn btn-outline-primary" @click="moveList">목록으로</button>
-            <button type="button" id="regBtn" v-if="type == 'regist'" class="btn btn-outline-primary" @click="regist">등&nbsp;록</button>
-            <button type="button" id="regBtn" v-else class="btn btn-outline-primary" @click="modify">수&nbsp;정</button>
+            <button type="button" id="regBtn" class="btn btn-outline-primary" v-if="this.type === 'regist'" @click="regist">등&nbsp;록</button>
+            <button type="button" id="regBtn" class="btn btn-outline-warning" v-else @click="modify">수&nbsp;정</button>
           </div>
         </div>
       </div>
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { registFree, getFree, modifyFree } from "@/api/free.js";
+import { registNotice, getNotice, modifyNotice } from "@/api/notice.js";
 import { mapState } from "vuex";
 
 const userStore = "userStore";
@@ -39,16 +39,16 @@ import "@toast-ui/editor/dist/toastui-editor.css";
 import { Editor } from "@toast-ui/vue-editor";
 
 export default {
-  name: "FreeBoardWriteForm",
-  props: {
-    type: String,
-  },
+  name: "NoticeBoardWriteForm",
   components: {
     editor: Editor,
   },
+  props: {
+    type: { type: String },
+  },
   data() {
     return {
-      free: {
+      notice: {
         title: "",
         writer: "",
         content: "",
@@ -58,34 +58,19 @@ export default {
   computed: {
     ...mapState(userStore, ["userInfo"]),
   },
-  created() {
-    alert(this.$route.params.no);
-    if (this.type === "modify") {
-      getFree(
-        this.$route.params.no,
-        (response) => {
-          this.free = response.data;
-          console.log(this.free);
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
-    }
-  },
   methods: {
     moveList() {
-      this.$router.push({ name: "Free" });
+      this.$router.push({ name: "Notice" });
     },
     regist() {
-      this.free.content = this.$refs.toastuiEditor.invoke("getMarkdown");
-      this.free.writer = this.userInfo.nickName;
-      registFree(
-        this.free,
+      this.notice.content = this.$refs.toastuiEditor.invoke("getMarkdown");
+      this.notice.writer = this.userInfo.nickName;
+      registNotice(
+        this.notice,
         (response) => {
           if (response.data === "success") {
             alert("게시글이 등록되었습니다.");
-            this.$router.push({ name: "Free" });
+            this.$router.push({ name: "Notice" });
           }
         },
         (error) => {
@@ -94,15 +79,14 @@ export default {
       );
     },
     modify() {
-      alert("modify");
-      this.free.content = this.$refs.toastuiEditor.invoke("getMarkdown");
-      this.free.writer = this.userInfo.nickName;
-      modifyFree(
-        this.free,
+      this.notice.content = this.$refs.toastuiEditor.invoke("getMarkdown");
+      this.notice.writer = this.userInfo.nickName;
+      modifyNotice(
+        this.notice,
         (response) => {
           if (response.data === "success") {
             alert("게시글이 수정되었습니다.");
-            this.$router.push({ name: "FreeBoardView", params: { no: this.$route.params.no } });
+            this.$router.push({ name: "NoticeBoardView", params: { no: this.$route.params.no } });
           }
         },
         (error) => {
@@ -110,6 +94,19 @@ export default {
         }
       );
     },
+  },
+  created() {
+    if (this.type === "modify") {
+      getNotice(
+        this.$route.params.no,
+        (response) => {
+          this.notice = response.data;
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    }
   },
 };
 </script>

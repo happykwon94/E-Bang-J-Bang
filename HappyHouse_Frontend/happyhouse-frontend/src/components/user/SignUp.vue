@@ -84,6 +84,7 @@ export default {
       }
     },
     "user.phone": function (val) {
+      console.log(val);
       const reg = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
 
       if (val.length == 0) {
@@ -92,7 +93,7 @@ export default {
       } else {
         if (reg.test(val) !== true) {
           this.isValidatePhone = false;
-          this.phoneValidateMsg = "xxx-xxxx-xxxx 양식을 확인해주세요.";
+          this.phoneValidateMsg = "010-xxxx-xxxx 양식을 확인해주세요.";
         } else {
           this.isValidatePhone = true;
           this.phoneValidateMsg = "";
@@ -121,9 +122,10 @@ export default {
   },
   methods: {
     ...mapActions(userStore, ["userJoin", "idValidation", "nickNameValidation"]),
-    join() {
+    async join() {
       if (this.isValidateId && this.isValidatePW && this.isValidateNickName && this.isValidatePhone && this.isValidateEmail) {
-        this.userJoin(this.user);
+        await this.userJoin(this.user);
+
         if (this.isSignUp) {
           alert("회원가입 되었습니다.");
 
@@ -178,7 +180,6 @@ export default {
         this.isValidateNickName = false;
         this.nickNameValidateMsg = "닉네임 12글자를 초과할 수 없습니다.";
       } else {
-        console.log(this.user.nickName);
         await validate(
           "nickName",
           this.user.nickName,
@@ -216,7 +217,6 @@ export default {
 </script>
 
 <style>
-
 .login-body {
   width: 500px;
   padding-top: 50px;

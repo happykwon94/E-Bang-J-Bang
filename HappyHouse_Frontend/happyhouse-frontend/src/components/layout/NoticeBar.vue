@@ -1,7 +1,6 @@
 <template>
   <div class="notice-content col-6">
     <h4>공지사항</h4>
-    <hr />
     <table class="table table-notice table-hover table-sm">
       <thead>
         <tr>

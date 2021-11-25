@@ -13,6 +13,15 @@
 		from noticeboard where no=#{no}
 	</select>
 	
+	<update id="updateNotice" parameterType="NoticeDto">
+		update noticeboard
+		set writer = #{writer},
+		content = #{content},
+		regTime = current_timestamp
+		where no = #{no}
+	</update>
+	
+		
 	<update id="updateHit" parameterType="String">
 		update noticeboard
 		set hit = hit + 1
@@ -21,7 +30,7 @@
 	
 	<insert id="insertNotice" parameterType="NoticeDto">
 		insert into noticeboard (title, writer, content)
-		values (#{title}, admin, #{content})
+		values (#{title}, #{writer}, #{content})
 	</insert>
 	
 	<delete id="deleteNotice" parameterType="String">

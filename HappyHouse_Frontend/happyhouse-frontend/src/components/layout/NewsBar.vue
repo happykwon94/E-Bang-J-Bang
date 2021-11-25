@@ -1,8 +1,7 @@
 <template>
   <div class="headline-content col-6">
     <h4>오늘의 뉴스</h4>
-    <hr />
-    <ul>
+    <ul class="mt-3">
       <news-list-row v-for="(news, idx) in headlines" :key="idx" v-bind="news"></news-list-row>
     </ul>
   </div>
@@ -30,4 +29,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+ul {
+  padding-left: 10px;
+}
+</style>

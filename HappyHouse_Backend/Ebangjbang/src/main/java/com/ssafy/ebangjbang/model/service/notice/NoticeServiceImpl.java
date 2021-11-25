@@ -40,7 +40,6 @@ public class NoticeServiceImpl implements NoticeService{
 
 	@Override
 	public int modifyNotice(NoticeDto notice) throws Exception {
-		// TODO Auto-generated method stub
 		return mapper.updateNotice(notice);
 	}
 
