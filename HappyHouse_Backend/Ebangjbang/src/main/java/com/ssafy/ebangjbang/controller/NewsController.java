@@ -29,7 +29,7 @@ public class NewsController {
 	@GetMapping("/headline")
 	public ResponseEntity<List<NewsDto>> getHeadline() throws IOException {
 		
-		logger.info("news 크롤링 - 호출");
+		logger.info("news list - 호출");
 		
 		List<NewsDto> list = new ArrayList<NewsDto>();
 		

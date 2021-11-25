@@ -75,6 +75,10 @@ export default {
 .navbar-brand, .nav-link {
   font-family: "jua";
 }
+
+.nav-link {
+  font-family: "jua";
+}
 .nav-link {
   cursor: pointer;
 }
