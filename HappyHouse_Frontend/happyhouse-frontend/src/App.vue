@@ -22,23 +22,16 @@ export default {
   src: url(./fonts/Jua-Regular.ttf);
 }
 
-@font-face {
-  font-family: "BMHANNAAir";
-  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.0/BMHANNAAir.woff") format("woff");
-  font-weight: normal;
-  font-style: normal;
-}
-
-@import url("https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap");
-
-body {
-  font-family: "Nanum Gothic", sans-serif;
+* {
+  font-family: "jua";
 }
 
 #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
+  height: 100%;
+  width: 100%;
 }
 
 #nav {

@@ -1,6 +1,6 @@
 <template>
   <!-- 주택 정보 -->
-  <ul v-if="houses && houses.length != 0">
+  <ul class="house-list-ul" v-if="houses && houses.length != 0">
     <li
       class="row listOne"
       v-for="house in paginatedData"
@@ -16,7 +16,7 @@
         </div>
         <div class="house-list-desc">
           <div>
-            <h2 style="paddig-bottom: 5px">{{ house.recentPrice }}원</h2>
+            <h3 style="paddig-bottom: 5px">{{ house.recentPrice }}만원</h3>
             <div>{{ house.aptName }}</div>
             <p>{{ house.dongName }} {{ house.jibun }}</p>
           </div>
@@ -26,7 +26,7 @@
     <li
       class="row listOne"
       v-for="house in paginatedData"
-      :key="house.aptCode"
+      :key="house.no"
       v-show="isGetData"
       @click="goMarker(house)"
     >
@@ -38,7 +38,7 @@
         </div>
         <div class="house-list-desc">
           <div>
-            <h2 style="paddig-bottom: 5px">{{ house.거래금액 }}원</h2>
+            <h3 style="paddig-bottom: 5px">{{ house.거래금액 }}만원</h3>
             <div>{{ house.아파트 }}</div>
             <p>{{ house.도로명 }} {{ house.지번 }}</p>
           </div>
@@ -46,61 +46,11 @@
       </div>
     </li>
   </ul>
-  <!-- <div class="house-list-body" v-if="houses && houses.length != 0">
-    <div class="row aptlist">
-      <div class="col text-left">일련번호</div>
-      <div class="col text-left">아파트 명</div>
-      <div class="col text-left">가격</div>
-    </div>
-    <div
-      class="row listOne"
-      v-for="house in paginatedData"
-      :key="house.aptCode"
-      v-show="!isGetData"
-      @click="goMarker(house)"
-    >
-      <div class="col text-left">{{ house.aptCode }}</div>
-      <div class="col text-left">{{ house.aptName }}</div>
-      <div class="col text-left">{{ house.recentPrice }}</div>
-    </div>
-    <div
-      class="row listOne"
-      v-for="(house, index) in paginatedData"
-      :key="index"
-      v-show="isGetData"
-      @click="goMarker(house)"
-    >
-      <div class="col text-left">{{ house.일련번호 }}</div>
-      <div class="col text-left">{{ house.아파트 }}</div>
-      <div class="col text-left">{{ house.거래금액 }}</div>
-    </div>
-    <div class="btn-cover mt-3">
-      <button
-        id="pre"
-        :disabled="pageNum === 0"
-        @click="prevPage"
-        class="page-btn btn btn-sm btn-outline-dark m"
-      >
-        이전
-      </button>
-      <span id="page" class="page-count"
-        >{{ pageNum + 1 }} / {{ pageCount }} 페이지</span
-      >
-      <button
-        id="next"
-        :disabled="pageNum >= pageCount - 1"
-        @click="nextPage"
-        class="page-btn btn btn-sm btn-outline-dark"
-      >
-        다음
-      </button>
-    </div>
-  </div>
-  <div id="searchInfo" v-else>
-    <div class="row">
+  <ul v-else>
+    <li>
       <div class="col">아파트 목록이 없습니다.</div>
-    </div>
-  </div> -->
+    </li>
+  </ul>
 </template>
 
 <script>
@@ -191,6 +141,16 @@ export default {
 
 .listOne > *:hover {
   background-color: rgb(220, 239, 255);
+}
+
+.listOne {
+  margin: 0px;
+  padding: 0px;
+}
+
+.house-list-ul {
+  margin: 0px;
+  padding: 0px;
 }
 
 house-list-row > ul {

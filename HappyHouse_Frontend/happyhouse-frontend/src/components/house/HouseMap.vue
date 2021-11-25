@@ -1,21 +1,15 @@
 <template>
   <!-- 지도 -->
   <!-- Kakao Map start -->
-  <div id="map1">
-    <!-- Modal -->
-    <modal-view />
-  </div>
+  <div id="map1"></div>
   <!-- Kakao Map end -->
 </template>
 
 <script language="JavaScript">
 import { mapActions, mapMutations, mapState } from "vuex";
-import ModalView from "./modalView.vue";
 const houseStore = "houseStore";
 export default {
-  components: {
-    ModalView,
-  },
+  components: {},
   name: "HouseMap",
   data() {
     return {
@@ -62,6 +56,7 @@ export default {
       // console.log("init");
       //지도를 담을 dom
       const container = document.getElementById("map1");
+      // alert(container);
       var lat, lng, position;
       // GeoLocation을 이용해서 접속 위치를 얻어옵니다
       navigator.geolocation.getCurrentPosition((pos) => {
@@ -74,16 +69,25 @@ export default {
           level: 3,
         };
         this.map1 = new kakao.maps.Map(container, options);
+
+        var imageSrc = require("@/assets/marker.png"), // 마커이미지의 주소입니다
+          imageSize = new kakao.maps.Size(40, 40), // 마커이미지의 크기입니다
+          imageOption = { offset: new kakao.maps.Point(27, 69) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+
+        // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
+        var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
+
         new kakao.maps.Marker({
           map: this.map1,
           position: position,
+          image: markerImage,
         });
         if (this.houses != null) {
           this.houses.forEach((house) => {
             this.displayMarker(house);
           });
         }
-        if (this.housesDeal == null) {
+        if (this.houseDeal) {
           this.map1.setCenter(new kakao.maps.LatLng(this.houseInfo.lat, this.houseInfo.lng));
         }
       });
@@ -95,7 +99,7 @@ export default {
         let moveLatLng = new kakao.maps.LatLng(house.lat, house.lng);
 
         var imageSrc = require("@/assets/marker.png"), // 마커이미지의 주소입니다
-          imageSize = new kakao.maps.Size(64, 69), // 마커이미지의 크기입니다
+          imageSize = new kakao.maps.Size(40, 40), // 마커이미지의 크기입니다
           imageOption = { offset: new kakao.maps.Point(27, 69) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
 
         // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
@@ -156,18 +160,16 @@ export default {
         c6.innerHTML = "최근 매매가 : " + house.recentPrice + "만원";
         c3.appendChild(c6);
         let c7 = document.createElement("button");
-        // c7.setAttribute("data-target", "#exampleModalCenter");
-        // c7.setAttribute("data-toggle", "modal");
-        // c7.setAttribute("id", "show-modal");
         c7.setAttribute("type", "button");
         // c7.setAttribute("v-on:click", "showModal = true");
         c7.className = "btn-sm btn-outline-dark";
         c7.innerHTML = "자세히 보기";
         c7.onclick = () => {
-          this.getHouse(house);
-          // console.log("getHouse");
-          // console.log();
-          this.$router.push({ name: "HouseDetail" });
+          // this.getHouse(house);
+          this.$router.push({
+            name: "HouseDetail",
+            params: { aptCode: house.aptCode },
+          });
         };
         c3.appendChild(c7);
 
@@ -175,6 +177,7 @@ export default {
 
         // 마커를 클릭했을 때 커스텀 오버레이를 표시합니다
         kakao.maps.event.addListener(marker, "click", () => {
+          console.log("houseInfo");
           console.log(house);
           overlay.setMap(this.map1);
           this.map1.panTo(moveLatLng);
@@ -193,18 +196,30 @@ export default {
           jibun: house.지번,
         });
         let address = this.address;
+        console.log("여기다");
+        console.log(address);
         let moveLatLng = "";
         var geocoder = new kakao.maps.services.Geocoder();
+
         geocoder.addressSearch(address, (result, status) => {
           // 정상적으로 검색이 완료됐으면
           if (status === kakao.maps.services.Status.OK) {
             // 이동할 위도 경도 위치를 생성합니다
             moveLatLng = new kakao.maps.LatLng(result[0].y, result[0].x);
             // console.log(moveLatLng);
+
+            var imageSrc = require("@/assets/marker.png"), // 마커이미지의 주소입니다
+              imageSize = new kakao.maps.Size(40, 40), // 마커이미지의 크기입니다
+              imageOption = { offset: new kakao.maps.Point(27, 69) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+
+            // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
+            var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
+
             // 마커 생성
-            let marker = new kakao.maps.Marker({
+            var marker = new kakao.maps.Marker({
               map: this.map1,
               position: moveLatLng,
+              image: markerImage,
               clickable: true,
             });
 
@@ -261,6 +276,10 @@ export default {
             c7.innerHTML = "자세히 보기";
             c7.onclick = () => {
               this.getHouse2({ houseDeal: house, houseInfo: house });
+              this.$router.push({
+                name: "HouseDetail",
+                params: { aptCode: house.일련번호 },
+              });
             };
             c3.appendChild(c7);
 
@@ -301,7 +320,7 @@ export default {
 
 #map1 {
   flex-grow: 1;
-  height: 650px;
+  height: 860px;
   margin: 0 auto;
 }
 

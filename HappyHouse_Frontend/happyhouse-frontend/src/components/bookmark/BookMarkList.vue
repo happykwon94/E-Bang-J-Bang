@@ -1,13 +1,17 @@
 <template>
-  <div>
+  <div class="book-mark-list container mt-5">
+    <div v-if="showCompare">
+      <book-mark-compare v-bind:homes="this.homes" />
+    </div>
     <div v-if="this.bookMarkList">
       <!-- {{ bookMarkList }} -->
       <book-mark-list-row
+        v-on:compare-house="compareHouse"
         v-bind="{ bookmark: bookmark, userNo: userInfo.no }"
         v-for="(bookmark, index) in bookMarkList"
         :key="index"
       />
-      <div class="btn-cover mt-3">
+      <div class="mt-5 paging">
         <button
           id="pre"
           :disabled="pageNum === 0"
@@ -37,15 +41,19 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
+import BookMarkCompare from "./BookMarkCompare.vue";
 import BookMarkListRow from "./BookMarkListRow.vue";
 const houseStore = "houseStore";
 const userStore = "userStore";
 export default {
-  components: { BookMarkListRow },
+  components: { BookMarkListRow, BookMarkCompare },
   name: "BookMarkList",
   data() {
     return {
       pageNum: 0,
+      homes: [],
+      showCompare: false,
+      re: false,
     };
   },
   props: {
@@ -56,7 +64,9 @@ export default {
     },
   },
   created() {
+    console.log("created");
     this.getBookMarkList(this.userInfo.no);
+    // this.homes = new Array();
   },
   computed: {
     ...mapState(houseStore, ["bookMarkList"]),
@@ -82,11 +92,38 @@ export default {
     prevPage() {
       this.pageNum -= 1;
     },
-  },
-  watch: {
-    bookMarkList() {
-      console.log("왜 무한반복..?");
-      this.getBookMarkList(this.userInfo.no);
+    compareHouse(bookmark) {
+      this.re = false;
+      if (this.homes != []) {
+        //이미 배열이 차있으면 검사
+        this.homes.forEach((home) => {
+          if (home.aptCode == bookmark.aptCode) {
+            // 삭제
+            this.editHomes(bookmark);
+            this.re = true;
+          }
+        });
+        if (!this.re) {
+          this.homes.push(bookmark);
+        }
+      } else {
+        this.homes.push(bookmark);
+      }
+      console.log(this.homes);
+      if (this.homes.length == 2) {
+        this.compare(true);
+      } else {
+        alert("비교하기는 두개 선택해주세요!");
+        this.compare(false);
+      }
+    },
+    editHomes(bookmark) {
+      this.homes = this.homes.filter((home) => {
+        return home.aptCode != bookmark.aptCode;
+      });
+    },
+    compare(res) {
+      this.showCompare = res;
     },
   },
 };
@@ -97,5 +134,13 @@ export default {
   border: 1px solid rgb(213, 213, 213);
   padding: 15px;
   font-size: 13px;
+}
+
+.paging {
+  float: right;
+}
+
+.page-btn {
+  margin-right: 20px;
 }
 </style>

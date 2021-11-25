@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,17 +18,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.ebangjbang.model.BookMarkDto;
-import com.ssafy.ebangjbang.model.ClinicDto;
 import com.ssafy.ebangjbang.model.HouseDealDto;
 import com.ssafy.ebangjbang.model.HouseInfoDto;
 import com.ssafy.ebangjbang.model.SeoulStoreDto;
 import com.ssafy.ebangjbang.model.SidoGugunCodeDto;
-import com.ssafy.ebangjbang.model.Dto.NoticeDto;
 import com.ssafy.ebangjbang.model.service.HouseService;
 
 @RestController
 @RequestMapping("/house")
-@CrossOrigin(origins = "*")
+@CrossOrigin("*")
 public class HouseController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(HouseController.class);
@@ -69,13 +68,15 @@ public class HouseController {
 		}
 	}
 
-	@GetMapping("aptInfo")
-	public ResponseEntity<HouseDealDto> aptInfo(@RequestParam("aptCode") String aptCode) throws Exception {
-		HouseDealDto housDealDto = houseService.getAptInfo(aptCode);
+	@GetMapping("aptInfo/{aptCode}")
+	public ResponseEntity<HouseDealDto> aptInfo(@PathVariable("aptCode") String aptCode) throws Exception {
+		HouseDealDto houseDealDto = houseService.getAptInfo(aptCode);
 		logger.debug("아파트코드: "+aptCode);
-		if(housDealDto != null) {
-			return new ResponseEntity<HouseDealDto>(housDealDto, HttpStatus.OK);
+		if(houseDealDto != null) {
+			System.out.println(houseDealDto.toString());
+			return new ResponseEntity<HouseDealDto>(houseDealDto, HttpStatus.OK);
 		}else {
+			System.out.println("엥");
 			return new ResponseEntity<HouseDealDto>(HttpStatus.NO_CONTENT);
 		}
 	}
@@ -133,7 +134,7 @@ public class HouseController {
 
 	@PostMapping("bookMark")
 	private ResponseEntity<String> setBookMark(@RequestBody BookMarkDto newBookMark) throws Exception {
-		
+		System.out.println(newBookMark.toString());
 		if(houseService.addBookMark(newBookMark)) {
 			return new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
 		}
@@ -142,8 +143,11 @@ public class HouseController {
 	
 	@GetMapping("bookMark")
 	public ResponseEntity<List<HouseDealDto>> bookMarkerList(@RequestParam("userNo") String userNo) throws Exception {
+		System.out.println("call!!");
+		System.out.println(userNo);
 		List<HouseDealDto> list;
 		list = houseService.getbookMarkerList(userNo);
+		System.out.println(list.toString());
 		if(list != null) {
 			return new ResponseEntity<List<HouseDealDto>>(list, HttpStatus.OK);
 		}else {

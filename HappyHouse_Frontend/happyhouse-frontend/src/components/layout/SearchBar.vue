@@ -104,7 +104,7 @@ export default {
       // alert("aptList()");
       this.getAptList(this.dongCode);
       this.SET_PRICE(null);
-      if(this.$route.name == "Home"){
+      if (this.$route.name == "Home") {
         this.$router.push({ name: "House" });
       }
     },
@@ -115,8 +115,4 @@ export default {
 };
 </script>
 
-<style>
-.searchbar {
-    font-family: "BMHANNAAir";
-}
-</style>
+<style></style>

@@ -14,15 +14,6 @@ const houseStore = {
     address: null,
     jibun: null,
     store: null,
-    landStore: [],
-    lifeStore: [],
-    serviceStore: [],
-    sportStore: [],
-    cafeStore: [],
-    foodStore: [],
-    eduStore: [],
-    playStore: [],
-    everyStore: [],
     isGetData: false,
     lat: "",
     lng: "",
@@ -68,34 +59,8 @@ const houseStore = {
       state.houseInfo = data;
     },
     SET_APT_DEAL(state, data) {
+      data;
       state.houseDeal = data;
-    },
-    SET_LAND_STORE(state, data) {
-      state.landStore = data;
-    },
-    SET_LIFE_STORE(state, data) {
-      state.lifeStore = data;
-    },
-    SET_SERVICE_STORE(state, data) {
-      state.serviceStore = data;
-    },
-    SET_SPORT_STORE(state, data) {
-      state.sportStore = data;
-    },
-    SET_CAFE_STORE(state, data) {
-      state.cafeStore = data;
-    },
-    SET_FOOD_STORE(state, data) {
-      state.foodStore = data;
-    },
-    SET_EDU_STORE(state, data) {
-      state.eduStore = data;
-    },
-    SET_PLAY_STORE(state, data) {
-      state.playStore = data;
-    },
-    SET_EVERY_STORE(state, data) {
-      state.everyStore = data;
     },
     SET_GET_DATA(state, data) {
       state.isGetData = data;
@@ -141,7 +106,7 @@ const houseStore = {
         .get(`/house/gugun`, { params })
         .then((response) => {
           commit("SET_GUGUN_LIST", response.data);
-          commit("SET_APT_DEAL", null);
+          // commit("SET_APT_DEAL", null);
           commit("SET_APT_LIST", []);
         })
         .catch((error) => {
@@ -155,7 +120,7 @@ const houseStore = {
         .get(`/house/dong`, { params })
         .then((response) => {
           commit("SET_DONG_LIST", response.data);
-          commit("SET_APT_DEAL", null);
+          // commit("SET_APT_DEAL", null);
           commit("SET_APT_LIST", []);
           commit("SET_GUGUN", gugunCode);
         })
@@ -172,23 +137,23 @@ const houseStore = {
           // console.log(response.data);
           commit("SET_GET_DATA", false);
           commit("SET_APT_LIST", response.data);
-          commit("SET_APT_DEAL", null);
-          commit("SET_APT_INFO", null);
           commit("SET_DONG", dongCode);
         })
         .catch((error) => {
           console.log(error);
         });
     },
-    getHouse({ commit }, house) {
-      const params = { aptCode: house.aptCode };
-      http
-        .get(`/house/aptInfo`, { params })
+    async getHouse({ commit }, house) {
+      console.log(1);
+      commit("SET_APT_INFO", house);
+      await http
+        .get(`/house/aptInfo/${house.aptCode}`)
         .then((response) => {
-          console.log(response.data);
-          commit("SET_APT_DEAL", response.data);
-          commit("SET_APT_INFO", house);
+          console.log(2);
           commit("SET_LAT_LNG", { lat: house.lat, lng: house.lng });
+          commit("SET_APT_DEAL", response.data);
+          console.log(response.data);
+          console.log(house);
         })
         .catch((error) => {
           console.log(error);
@@ -198,83 +163,6 @@ const houseStore = {
       commit("SET_APT_DEAL", houseApi.houseDeal);
       commit("SET_APT_INFO", houseApi.houseInfo);
     },
-    getStoreList({ commit }, dongName) {
-      var params = { dongName: dongName, classDetail2: "'부동산중개'" };
-      http.get(`/house/store`, { params }).then((response) => {
-        commit("SET_LAND_STORE", response.data);
-      });
-      params = {
-        dongName: dongName,
-        classDetail2: "'수퍼마켓','할인점','식료품점'",
-      };
-      http.get(`/house/store`, { params }).then((response) => {
-        commit("SET_LIFE_STORE", response.data);
-      });
-      params = {
-        dongName: dongName,
-        classDetail2:
-          "'세탁소/빨래방','비만/피부관리','여성미용실','남성미용실','발/네일케어'",
-      };
-      http.get(`/house/store`, { params }).then((response) => {
-        commit("SET_SERVICE_STORE", response.data);
-      });
-      params = {
-        dongName: dongName,
-        classDetail2:
-          "'헬스클럽','기타운영설비','실내골프연습장','기타실내운동시설','학원-스포츠/재즈댄스'",
-      };
-      http.get(`/house/store`, { params }).then((response) => {
-        commit("SET_SPORT_STORE", response.data);
-      });
-      params = { dongName: dongName, classDetail2: "'커피전문점/카페/다방'" };
-      http.get(`/house/store`, { params }).then((response) => {
-        commit("SET_CAFE_STORE", response.data);
-      });
-      params = {
-        dongName: dongName,
-        classDetail2:
-          "'한식/백반/한정식','패스트푸드','족발/보쌈전문','곱창/양구이전문','토스트전문','삼계탕전문','국수/만두/칼국수','정통양식/경양식','부대찌개/섞어찌개','후라이드/양념치킨','라면김밥분식','떡볶이전문','기사식당','갈비/삼겹살','스파게티전문점'",
-      };
-      http.get(`/house/store`, { params }).then((response) => {
-        commit("SET_FOOD_STORE", response.data);
-      });
-      params = {
-        dongName: dongName,
-        classDetail2:
-          "'학원-입시', '피아노/바이올린/기타','독서실','학원(종합)','학원-외국어/어학'",
-      };
-      http.get(`/house/store`, { params }).then((response) => {
-        commit("SET_EDU_STORE", response.data);
-      });
-      params = {
-        dongName: dongName,
-        classDetail2:
-          "'인터넷PC방','노래방','연극/음악/예술관린기타','볼링장','당구장'",
-      };
-      http.get(`/house/store`, { params }).then((response) => {
-        commit("SET_PLAY_STORE", response.data);
-      });
-      params = {
-        dongName: dongName,
-        classDetail2: "'편의점'",
-      };
-      http.get(`/house/store`, { params }).then((response) => {
-        commit("SET_EVERY_STORE", response.data);
-      });
-    },
-    // getAptListPrice({ commit }, search) {
-    //   const params = { dong: search.dongCode, maxPrice: search.price };
-    //   http
-    //     .get(`/house/aptList`, { params })
-    //     .then((response) => {
-    //       // 가격 검색
-    //       commit("SET_GET_DATA", false); // api 사용 안함
-    //       commit("SET_APT_LIST", response.data); // aptlist 초기화
-    //     })
-    //     .catch((error) => {
-    //       console.log(error);
-    //     });
-    // },
     // api 사용
     getAptListYearMonth({ commit }, search) {
       const d = search.date.replace(/-/g, "");
@@ -313,9 +201,9 @@ const houseStore = {
         });
     },
     setBookMark({ commit }, bookmark) {
-      // console.log(bookmark.housedealNo);
-      // console.log(bookmark.userNo);
-
+      console.log(bookmark.housedealNo);
+      console.log(bookmark.userNo);
+      console.log("setBookMark");
       const newBookMark = {
         userNo: bookmark.userNo,
         housedealNo: bookmark.housedealNo,
@@ -327,7 +215,7 @@ const houseStore = {
           if (response.data === "SUCCESS") {
             alert("북마크 등록 성공!");
           } else {
-            alert("북마크 등록 실패!");
+            alert("이미 북마크 설정!");
           }
         })
         .catch((error) => {
@@ -335,11 +223,13 @@ const houseStore = {
         });
     },
     getBookMarkList({ commit }, userNo) {
-      // alert("북마크");
+      console.log("getBookMarkList");
+      console.log(userNo);
       const params = { userNo: userNo };
       http
         .get(`/house/bookMark`, { params })
         .then((response) => {
+          console.log("북마크 받아옴");
           commit("SET_BOOKMARK_LIST", response.data);
           console.log(response.data);
         })

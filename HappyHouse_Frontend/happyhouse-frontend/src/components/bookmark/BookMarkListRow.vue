@@ -1,11 +1,19 @@
 <template>
   <div class="bookmarkBox row">
+    <div class="form-check">
+      <label class="form-check-label">
+        <input
+          type="checkbox"
+          class="form-check-input"
+          name="compare"
+          id=""
+          @click="moveList(bookmark)"
+        />
+        비교하기
+      </label>
+    </div>
     <div class="col-3">
-      <img
-        src="https://cfile181.uf.daum.net/image/250649365602043421936D"
-        width="73"
-        height="70"
-      />
+      <img src="@/assets/test00.png" width="73" height="70" />
     </div>
     <div class="col-7">
       <div class="row">
@@ -44,10 +52,14 @@
     </div>
     <div class="col">
       <div class="row" style="padding-bottom: 15px">
-        <router-link :to="{ name: 'HouseDetail', params: { no: bookmark.no } }"
+        <router-link
+          :to="{ name: 'HouseDetail', params: { aptCode: bookmark.aptCode } }"
           >자세히보기</router-link
         >
       </div>
+    </div>
+    <div v-if="showCompare">
+      <book-mark-compare v-bind:homes="this.homes" />
     </div>
   </div>
 </template>
@@ -61,12 +73,22 @@ export default {
     bookmark: Object,
     userNo: String,
   },
+  data() {
+    return {
+      homes: [],
+      showCompare: false,
+    };
+  },
   methods: {
     ...mapActions(houseStore, ["deleteBookMark"]),
     delBookMark(bookMarkInfo) {
       this.deleteBookMark(bookMarkInfo);
     },
+    moveList(bookmark) {
+      this.$emit("compare-house", bookmark);
+    },
   },
+  computed() {},
 };
 </script>
 
