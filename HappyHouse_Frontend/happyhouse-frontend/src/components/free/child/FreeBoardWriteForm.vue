@@ -65,7 +65,6 @@ export default {
         this.$route.params.no,
         (response) => {
           this.free = response.data;
-          console.log(this.free);
         },
         (error) => {
           console.log(error);

@@ -3,7 +3,7 @@
   <ul class="house-list-ul" v-if="houses && houses.length != 0">
     <li
       class="row listOne"
-      v-for="house in paginatedData"
+      v-for="house in getterAptList"
       :key="house.aptCode"
       v-show="!isGetData"
       @click="goMarker(house)"
@@ -16,7 +16,9 @@
         </div>
         <div class="house-list-desc">
           <div>
-            <h3 style="paddig-bottom: 5px">{{ house.recentPrice }}만원</h3>
+            <h3 style="paddig-bottom: 5px">
+              {{ house.recentPrice | test}}
+            </h3>
             <div>{{ house.aptName }}</div>
             <p>{{ house.dongName }} {{ house.jibun }}</p>
           </div>
@@ -25,7 +27,7 @@
     </li>
     <li
       class="row listOne"
-      v-for="house in paginatedData"
+      v-for="house in getterAptList"
       :key="house.no"
       v-show="isGetData"
       @click="goMarker(house)"
@@ -38,7 +40,7 @@
         </div>
         <div class="house-list-desc">
           <div>
-            <h3 style="paddig-bottom: 5px">{{ house.거래금액 }}만원</h3>
+            <h3 style="paddig-bottom: 5px">{{ house.거래금액 | test }}</h3>
             <div>{{ house.아파트 }}</div>
             <p>{{ house.도로명 }} {{ house.지번 }}</p>
           </div>
@@ -64,7 +66,6 @@ export default {
     return {
       pageNum: 0,
       isClick: false,
-      color: "rgb(194, 216, 255)",
     };
   },
   props: {
@@ -84,7 +85,6 @@ export default {
     },
     goMarker(house) {
       // getMove(house)
-      console.log(house);
       this.SET_LAT_LNG({ lat: house.lat, lng: house.lng });
     },
   },
@@ -102,6 +102,17 @@ export default {
       const start = this.pageNum * this.pageSize,
         end = start + this.pageSize;
       return this.getterAptList.slice(start, end);
+    },
+  },
+  filters: {
+    test: function (value) {
+      
+      // value = value.replace(/,/gi ,"");
+      // return value.slice(0, value.length-4)+"."+value.toString().slice(-4).replace(/0/g, "")+"억";
+      // return String(value).trim().replace(/,/gi,"").slice(0, String(value).trim().length-4)+"."+String(value).trim().slice(-4).replace(/0/gi, "")+"억";
+      let v = String(value).trim();
+      v = v.replace(/,/g, "");
+      return v.slice(0, v.length-4)+"."+v.slice(-4).replace(/0/g,"")+"억";
     },
   },
 };

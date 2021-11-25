@@ -45,7 +45,7 @@ export default {
       const script = document.createElement("script");
       /* global kakao */
       script.onload = () => kakao.maps.load(this.initMap);
-      script.src = "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=e3f5368c16f60513648c83fa8b24274d&libraries=services";
+      script.src = `//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=${process.env.VUE_APP_KAKAO_MAP_JS_KEY}&libraries=services`;
       document.head.appendChild(script);
     }
   },
@@ -53,16 +53,13 @@ export default {
     ...mapActions(houseStore, ["getHouse", "getHouse2", "addressName"]),
     ...mapMutations(houseStore, ["SET_LAT_LNG"]),
     initMap() {
-      // console.log("init");
       //지도를 담을 dom
       const container = document.getElementById("map1");
-      // alert(container);
       var lat, lng, position;
       // GeoLocation을 이용해서 접속 위치를 얻어옵니다
       navigator.geolocation.getCurrentPosition((pos) => {
         lat = pos.coords.latitude; // 위도
         lng = pos.coords.longitude; // 경도
-        // console.log(lat+" "+lng);
         position = new kakao.maps.LatLng(lat, lng); // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
         var options = {
           center: position,
@@ -95,7 +92,6 @@ export default {
     //houses가 바뀔 때마다 새로 좌표찍기
     async displayMarker(house) {
       if (!this.isGetData) {
-        // console.log("db");
         let moveLatLng = new kakao.maps.LatLng(house.lat, house.lng);
 
         var imageSrc = require("@/assets/marker.png"), // 마커이미지의 주소입니다
@@ -105,7 +101,6 @@ export default {
         // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
         var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
 
-        // console.log(moveLatLng);
         // 마커 생성
         let marker = new kakao.maps.Marker({
           map: this.map1,
@@ -157,15 +152,13 @@ export default {
         c3.appendChild(c5);
         let c6 = document.createElement("div");
         c6.className = "desc";
-        c6.innerHTML = "최근 매매가 : " + house.recentPrice + "만원";
+        c6.innerHTML = "최근 매매가 : " + house.recentPrice.slice(0, (house.recentPrice.length - 4))+"."+house.recentPrice.slice(-4).replace(/0/g, "")+"억";
         c3.appendChild(c6);
         let c7 = document.createElement("button");
         c7.setAttribute("type", "button");
-        // c7.setAttribute("v-on:click", "showModal = true");
-        c7.className = "btn-sm btn-outline-dark";
+        c7.className = "btn-sm btn-outline btn-detail btn";
         c7.innerHTML = "자세히 보기";
         c7.onclick = () => {
-          // this.getHouse(house);
           this.$router.push({
             name: "HouseDetail",
             params: { aptCode: house.aptCode },
@@ -177,8 +170,6 @@ export default {
 
         // 마커를 클릭했을 때 커스텀 오버레이를 표시합니다
         kakao.maps.event.addListener(marker, "click", () => {
-          console.log("houseInfo");
-          console.log(house);
           overlay.setMap(this.map1);
           this.map1.panTo(moveLatLng);
         });
@@ -190,14 +181,11 @@ export default {
         // 지도 중심좌표를 접속위치로 변경합니다
         this.map1.panTo(moveLatLng);
       } else {
-        // console.log("api");
         await this.addressName({
           dongName: house.법정동.trim(),
           jibun: house.지번,
         });
         let address = this.address;
-        console.log("여기다");
-        console.log(address);
         let moveLatLng = "";
         var geocoder = new kakao.maps.services.Geocoder();
 
@@ -206,7 +194,6 @@ export default {
           if (status === kakao.maps.services.Status.OK) {
             // 이동할 위도 경도 위치를 생성합니다
             moveLatLng = new kakao.maps.LatLng(result[0].y, result[0].x);
-            // console.log(moveLatLng);
 
             var imageSrc = require("@/assets/marker.png"), // 마커이미지의 주소입니다
               imageSize = new kakao.maps.Size(40, 40), // 마커이미지의 크기입니다
@@ -269,10 +256,10 @@ export default {
             c3.appendChild(c5);
             let c6 = document.createElement("div");
             c6.className = "desc";
-            c6.innerHTML = "최근 매매가 : " + house.거래금액.trim() + "만원";
+            c6.innerHTML = "최근 매매가 : " + house.거래금액.trim().replace(/,/gi,"").slice(0,house.거래금액.trim().length-5)+"."+house.거래금액.trim().replace(/,/gi,"").slice(-4).replace(/0/gi,"")+"억";
             c3.appendChild(c6);
             let c7 = document.createElement("button");
-            c7.className = "btn-sm btn-outline-dark";
+            c7.className = "btn-sm btn-outline btn btn-detail";
             c7.innerHTML = "자세히 보기";
             c7.onclick = () => {
               this.getHouse2({ houseDeal: house, houseInfo: house });
@@ -353,10 +340,10 @@ export default {
 .info .title {
   padding: 5px 0 0 10px;
   height: 30px;
-  background: #eee;
+  background: #42b983;
   border-bottom: 1px solid #ddd;
   font-size: 18px;
-  font-weight: bold;
+  color: white;
 }
 .info .close {
   position: absolute;
@@ -370,6 +357,16 @@ export default {
 .info .close:hover {
   cursor: pointer;
 }
+
+.info .btn-detail{
+  color: #42b983;
+}
+
+.info .btn-detail:hover {
+  background-color: #42b983;
+  color: white;
+}
+
 .info .body {
   position: relative;
   overflow: auto;

@@ -53,7 +53,6 @@ const houseStore = {
     },
     SET_APT_LIST(state, data) {
       state.houses = data;
-      console.log(state.houses);
     },
     SET_APT_INFO(state, data) {
       state.houseInfo = data;
@@ -64,8 +63,6 @@ const houseStore = {
     },
     SET_GET_DATA(state, data) {
       state.isGetData = data;
-      console.log("state.isGetData");
-      console.log(state.isGetData);
     },
     SET_ADDRESS_NAME(state, data) {
       state.address =
@@ -101,7 +98,6 @@ const houseStore = {
     },
     getGugun({ commit }, sidoCode) {
       const params = { sido: sidoCode };
-      console.log("시도 :" + sidoCode);
       http
         .get(`/house/gugun`, { params })
         .then((response) => {
@@ -114,7 +110,6 @@ const houseStore = {
         });
     },
     getDong({ commit }, gugunCode) {
-      console.log("구군: " + gugunCode);
       const params = { gugun: gugunCode };
       http
         .get(`/house/dong`, { params })
@@ -129,12 +124,10 @@ const houseStore = {
         });
     },
     getAptList({ commit }, dongCode, price) {
-      console.log("동: " + dongCode + " 가격: " + price);
       const params = { dong: dongCode, maxPrice: price };
       http
         .get(`/house/aptList`, { params })
         .then((response) => {
-          // console.log(response.data);
           commit("SET_GET_DATA", false);
           commit("SET_APT_LIST", response.data);
           commit("SET_DONG", dongCode);
@@ -144,16 +137,12 @@ const houseStore = {
         });
     },
     async getHouse({ commit }, house) {
-      console.log(1);
       commit("SET_APT_INFO", house);
       await http
         .get(`/house/aptInfo/${house.aptCode}`)
         .then((response) => {
-          console.log(2);
           commit("SET_LAT_LNG", { lat: house.lat, lng: house.lng });
           commit("SET_APT_DEAL", response.data);
-          console.log(response.data);
-          console.log(house);
         })
         .catch((error) => {
           console.log(error);
@@ -170,7 +159,7 @@ const houseStore = {
         "http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTradeDev";
       const params = {
         ServiceKey:
-          "3q5vt8ofkG59GUwMPmoqxI3FuUidmjWfRI8RFp0+ACnR6abveZrQPMiq/KIj+0Uxstbc7/PC2ynj+9lBRltPVw==",
+          `${process.env.VUE_APP_DATA_GO_KR_KEY}`,
         LAWD_CD: encodeURIComponent(search.gugunCode),
         DEAL_YMD: encodeURIComponent(d),
         numOfRows: encodeURIComponent(45),
@@ -178,7 +167,6 @@ const houseStore = {
       http
         .get(SERVICE_URL, { params })
         .then((response) => {
-          console.log(response.data.response.body.items.item);
           commit("SET_GET_DATA", true);
           commit("SET_APT_LIST", response.data.response.body.items.item);
         })
@@ -201,9 +189,6 @@ const houseStore = {
         });
     },
     setBookMark({ commit }, bookmark) {
-      console.log(bookmark.housedealNo);
-      console.log(bookmark.userNo);
-      console.log("setBookMark");
       const newBookMark = {
         userNo: bookmark.userNo,
         housedealNo: bookmark.housedealNo,
@@ -223,15 +208,11 @@ const houseStore = {
         });
     },
     getBookMarkList({ commit }, userNo) {
-      console.log("getBookMarkList");
-      console.log(userNo);
       const params = { userNo: userNo };
       http
         .get(`/house/bookMark`, { params })
         .then((response) => {
-          console.log("북마크 받아옴");
           commit("SET_BOOKMARK_LIST", response.data);
-          console.log(response.data);
         })
         .catch((error) => {
           console.log(error);
@@ -244,6 +225,7 @@ const houseStore = {
         .then((response) => {
           console.log(commit);
           if (response.data === "SUCCESS") {
+            // this.getBookMarkList(bookMarkInfo.userNo);
             alert("북마크 삭제");
           }
         })
@@ -255,7 +237,6 @@ const houseStore = {
   modules: {},
   getters: {
     getterAptList(state) {
-      console.log(state.price);
       if (!state.price) {
         // 가격이 설정 X면 전체
         return state.houses;
@@ -276,6 +257,9 @@ const houseStore = {
         }
       }
     },
+    getterBookMarkList(state) {
+      return state.bookMarkList;
+    }
   },
 };
 

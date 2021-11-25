@@ -63,7 +63,6 @@ export default {
         await this.getUserInfo(token);
 
         if (this.saveId === true) {
-          console.log("test");
           this.$cookies.set("ebjb-save-id", this.user.id);
         } else {
           this.$cookies.remove("ebjb-save-id");
