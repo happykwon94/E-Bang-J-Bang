@@ -37,7 +37,7 @@
 	</select>
 	
 	<select id="getAptInfo" parameterType="string" resultType="HouseDealDto">
-		select h.*, h2.aptName , b.sidoName , b.gugunName , b.dongName 
+		select h.*, h2.aptName , b.sidoName , b.gugunName , b.dongName , h2.buildYear, h2.jibun, h2.lat, h2.lng 
 		from housedeal h 
 		join houseinfo h2 
 		ON h.aptCode = h2.aptCode 
@@ -79,7 +79,7 @@
 	
 	<insert id="addBookMark" parameterType="BookMarkDto">
 		insert into bookmark(userNo, housedealNo)
-		values(#{userNo}, #{housedealNo});
+		values(#{userNo}, #{housedealNo})
 	</insert>
 	
 	<select id="getbookMarkerList" parameterType="string" resultType="HouseDealDto">
@@ -93,13 +93,13 @@
 		on h2.aptCode = h.aptCode 
 		join baseaddress b2 
 		on b2.dongName = h2.dongName 
-		where u.`no` = #{userNo};
+		where u.`no` = #{userNo}
 	</select>
 	
 	<delete id="deleteBookMark" parameterType="hashmap">
 		delete
 		from bookmark
-		where userNo = #{userNo} and housedealNo = #{aptNo};
+		where userNo = #{userNo} and housedealNo = #{aptNo}
 	</delete>
 	
 </mapper>

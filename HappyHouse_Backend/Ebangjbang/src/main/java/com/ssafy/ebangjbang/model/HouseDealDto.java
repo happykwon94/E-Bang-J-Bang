@@ -7,6 +7,11 @@ public class HouseDealDto {
     private String sidoName;//
     private String gugunName;//
     private String dongName;//
+    private String jibun;//
+    private String lat;//
+    private String lng;//
+    private String buildYear;//
+    
 	private String dealAmount;
     private String dealYear;
     private String dealMonth;
@@ -93,6 +98,32 @@ public class HouseDealDto {
 		this.rentMoney = rentMoney;
 	}
 	
+	
+	
+	public String getJibun() {
+		return jibun;
+	}
+	public void setJibun(String jibun) {
+		this.jibun = jibun;
+	}
+	public String getLat() {
+		return lat;
+	}
+	public void setLat(String lat) {
+		this.lat = lat;
+	}
+	public String getLng() {
+		return lng;
+	}
+	public void setLng(String lng) {
+		this.lng = lng;
+	}
+	public String getBuildYear() {
+		return buildYear;
+	}
+	public void setBuildYear(String buildYear) {
+		this.buildYear = buildYear;
+	}
 	@Override
 	public String toString() {
 		return "HouseDealDto [no=" + no + ", aptCode=" + aptCode + ", aptName=" + aptName + ", sidoName=" + sidoName
