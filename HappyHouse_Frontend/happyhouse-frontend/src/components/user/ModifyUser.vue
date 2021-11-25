@@ -9,7 +9,7 @@
       <br />
       <div class="">
         <label for="">닉네임</label>
-        <input type="text" class="form-control" placeholder="닉네임 입력" required :value="this.user.nickName" @input="nickNameValidate" />
+        <input type="text" class="form-control" placeholder="닉네임 입력" required :value="aka" @input="nickNameValidate" />
         <span :class="{ 'text-primary': isValidateNickName, 'text-danger': !isValidateNickName }">{{ nickNameValidateMsg }}</span>
       </div>
       <br />
@@ -21,11 +21,11 @@
       <br />
       <div class="">
         <label for="">새로운 비밀번호</label>
-        <input type="password" class="form-control form-control2" placeholder="새로운 비밀번호" v-model="this.newPassword" autocomplete="off" />
+        <input type="password" class="form-control form-control2" placeholder="새로운 비밀번호" v-model="newPassword" autocomplete="off" @input="setNewPassword" />
       </div>
       <div class="">
         <label for="">새로운 비밀번호 확인</label>
-        <input type="password" class="form-control form-control2" placeholder="새로운 비밀번호 확인" v-model="this.newPasswordVal" autocomplete="off" @input="pwValidate" />
+        <input type="password" class="form-control form-control2" placeholder="새로운 비밀번호 확인" v-model="newPasswordVal" autocomplete="off" @input="pwValidate" />
         <span class="text-danger">{{ passwordValidateMsg }}</span>
       </div>
       <br />
@@ -64,6 +64,7 @@ export default {
         phone: "",
         email: "",
       },
+      aka: "",
       newPassword: "",
       newPasswordVal: "",
       passwordValidateMsg: "",
@@ -100,6 +101,7 @@ export default {
   created() {
     this.user = this.userInfo;
     this.user.password = "";
+    this.aka = this.userInfo.nickName;
   },
   methods: {
     ...mapMutations(userStore, ["SET_IS_LOGIN", "SET_USER_INFO"]),
@@ -130,6 +132,7 @@ export default {
         if (this.newPassword.length != 0) {
           if (this.isPossible) {
             this.user.password = this.newPasswordVal;
+            this.user.nickName = this.aka;
             await modifyUser(this.user, (response) => {
               if (response.data === "success") {
                 alert("회원정보가 수정되었습니다.");
@@ -153,9 +156,27 @@ export default {
         }
       }
     },
+    setNewPassword(e) {
+      this.newPassword = e.target.value;
+      console.log(this.newPassword);
+
+      if (this.newPassword.length == 0) {
+        this.passwordValidateMsg = "";
+      } else {
+        if (this.newPassword != this.newPasswordVal) {
+          this.isPossible = false;
+          this.passwordValidateMsg = "비밀번호가 일치하지 않습니다.";
+        } else {
+          this.isPossible = true;
+          this.passwordValidateMsg = "";
+        }
+      }
+    },
     pwValidate(e) {
       this.newPasswordVal = e.target.value;
-      if (this.newPasswordVal == 0) {
+      console.log(this.newPasswordVal);
+
+      if (this.newPasswordVal.length == 0) {
         this.passwordValidateMsg = "";
       } else {
         if (this.newPasswordVal != this.newPassword) {
@@ -189,20 +210,21 @@ export default {
       );
     },
     nickNameValidate(e) {
-      this.user.nickName = e.target.value;
-      if (this.user.nickName.length < 1) {
+      this.aka = e.target.value;
+      // this.user.nickName = e.target.value;
+      if (this.aka < 1) {
         this.nickNameValidateMsg = "";
-      } else if (this.user.nickName.length < 2) {
+      } else if (this.aka.length < 2) {
         this.isValidateNickName = false;
         this.nickNameValidateMsg = "닉네임은 2 글자 이상 12글자 이하만 가능합니다.";
-      } else if (this.user.nickName.length > 12) {
-        this.user.nickName = this.user.nickName.substring(0, 12);
+      } else if (this.aka.length > 12) {
+        this.aka = this.aka.substring(0, 12);
         this.isValidateNickName = false;
         this.nickNameValidateMsg = "닉네임 12글자를 초과할 수 없습니다.";
       } else {
         validate(
           "nickName",
-          this.user.nickName,
+          this.aka,
           (response) => {
             // 사용가능한 아이디
             if (response.data === "success") {
@@ -218,6 +240,36 @@ export default {
           }
         );
       }
+
+      // this.user.nickName = e.target.value;
+      // if (this.user.nickName.length < 1) {
+      //   this.nickNameValidateMsg = "";
+      // } else if (this.user.nickName.length < 2) {
+      //   this.isValidateNickName = false;
+      //   this.nickNameValidateMsg = "닉네임은 2 글자 이상 12글자 이하만 가능합니다.";
+      // } else if (this.user.nickName.length > 12) {
+      //   this.user.nickName = this.user.nickName.substring(0, 12);
+      //   this.isValidateNickName = false;
+      //   this.nickNameValidateMsg = "닉네임 12글자를 초과할 수 없습니다.";
+      // } else {
+      //   validate(
+      //     "nickName",
+      //     this.user.nickName,
+      //     (response) => {
+      //       // 사용가능한 아이디
+      //       if (response.data === "success") {
+      //         this.isValidateNickName = true;
+      //         this.nickNameValidateMsg = "사용 가능한 닉네임입니다.";
+      //       } else {
+      //         this.isValidateNickName = false;
+      //         this.nickNameValidateMsg = "사용 불가능한 닉네임입니다.";
+      //       }
+      //     },
+      //     (error) => {
+      //       console.log(error);
+      //     }
+      //   );
+      // }
     },
   },
 };
