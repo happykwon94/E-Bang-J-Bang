@@ -5,8 +5,7 @@ import store from "@/store/index.js";
 import Home from "../views/Home.vue";
 
 import House from "@/views/House.vue";
-import HouseMap from "@/components/house/HouseMap.vue";
-import HouseList from "@/components/house/HouseList.vue";
+import HouseView from "@/components/house/HouseView.vue";
 import HouseDetail from "@/components/house/HouseDetail.vue";
 
 import NoticeBoard from "@/views/NoticeBoard.vue";
@@ -19,7 +18,7 @@ import SignUp from "@/components/user/SignUp.vue";
 import KakaoLogin from "@/components/social/KakaoLogin.vue";
 
 import BookMark from "@/views/BookMark.vue";
-import BookMarkList from '../components/bookmark/BookMarkList.vue';
+import BookMarkList from "../components/bookmark/BookMarkList.vue";
 
 import FreeBoard from "@/views/FreeBoard.vue";
 import FreeBoardList from "@/components/free/FreeBoardList.vue";
@@ -57,19 +56,15 @@ const routes = [
     path: "/house",
     name: "House",
     component: House,
+    redirect: "/house/houseView",
     children: [
       {
-        path: "/houseMap",
-        name: "HouseMap",
-        component: HouseMap,
+        path: "houseView",
+        name: "HouseView",
+        component: HouseView,
       },
       {
-        path: "/houseList",
-        name: "HouseList",
-        component: HouseList,
-      },
-      {
-        path: "/houseDetail",
+        path: "houseView/:aptCode",
         name: "HouseDetail",
         component: HouseDetail,
       },

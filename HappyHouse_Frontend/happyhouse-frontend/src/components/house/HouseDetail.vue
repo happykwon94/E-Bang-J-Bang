@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div class="house-detail-body">
     <div class="row-12">
       <div v-if="this.isGetData">
         <div class="row">
@@ -16,12 +16,7 @@
             </ul>
           </div>
           <div class="col-2">
-            <button class="btn btn-outline-primary" @click="moveHouseList">
-              지도보기
-            </button>
-          </div>
-          <div class="col-2">
-            <button class="btn btn-outline-warning" @click="moveHouseList">
+            <button class="btn btn-outline-warning" @click="addBookMarker">
               관심
             </button>
           </div>
@@ -58,11 +53,6 @@
             </ul>
           </div>
           <div class="col" style="margin-left: auto">
-            <div class="row" style="margin-bottom: 5px">
-              <button class="btn btn-outline-primary" @click="moveHouseList">
-                지도보기
-              </button>
-            </div>
             <div class="row">
               <button class="btn btn-outline-warning" @click="addBookMarker">
                 관심
@@ -74,7 +64,7 @@
           <div class="row deal">
             <div class="col-5">
               주소: {{ houseDeal.sidoName }} {{ houseDeal.gugunName }}
-              {{ houseDeal.dongName }} {{ houseInfo.jibun }}
+              {{ houseDeal.dongName }} {{ houseDeal.jibun }}
             </div>
             <div class="col-3">아파트 이름: {{ houseDeal.aptName }}</div>
             <div class="col-3">해당층: {{ houseDeal.floor }}층</div>
@@ -84,7 +74,7 @@
               거래일: {{ houseDeal.dealYear }}년 {{ houseDeal.dealMonth }}월
               {{ houseDeal.dealDay }}일
             </div>
-            <div class="col-3">건축년도: {{ houseInfo.buildYear }}년</div>
+            <div class="col-3">건축년도: {{ houseDeal.buildYear }}년</div>
           </div>
         </div>
       </div>
@@ -101,48 +91,31 @@
         ></div>
         <!-- 지도 위에 표시될 마커 카테고리 0은 classDtail 1은 class-->
         <ul class="category">
-          <li id="BK9" @click="selCategory('부동산', '0')">
+          <li id="BK9" data-order="0" @click="searchCategory('BK9', 0)">
             <span class="category_bg bank"></span>
-            부동산
+            은행
           </li>
-          <li id="MT1" @click="selCategory('소매', '1')">
+          <li id="MT1" data-order="1" @click="searchCategory('MT1', 1)">
             <span class="category_bg mart"></span>
-            소매
+            마트
           </li>
-          <li id="PM9" @click="selCategory('생활서비스', '2')">
+          <li id="PM9" data-order="2" @click="searchCategory('PM9', 2)">
             <span class="category_bg pharmacy"></span>
-            생활서비스
+            약국
           </li>
-          <li id="OL7" @click="selCategory('스포츠', '3')">
+          <li id="OL7" data-order="3" @click="searchCategory('OL7', 3)">
             <span class="category_bg oil"></span>
-            스포츠
+            주유소
           </li>
-          <li id="CE7" @click="selCategory('카페', '4')">
+          <li id="CE7" data-order="4" @click="searchCategory('CE7', 4)">
             <span class="category_bg cafe"></span>
             카페
           </li>
-          <li id="CE7" @click="selCategory('편의점', '4')">
-            <span class="category_bg cafe"></span>
+          <li id="CS2" data-order="5" @click="searchCategory('CS2', 5)">
+            <span class="category_bg store"></span>
             편의점
           </li>
-          <li id="CS2" @click="selCategory('음식', '4')">
-            <span class="category_bg store"></span>
-            음식
-          </li>
-          <li id="CS2" @click="selCategory('교육', '4')">
-            <span class="category_bg store"></span>
-            교육
-          </li>
-          <li id="CS2" @click="selCategory('여가', '4')">
-            <span class="category_bg store"></span>
-            여가
-          </li>
-          <li id="CS2" @click="selCategory('여가', '4')">
-            <span class="category_bg store"></span>
-            보건소 (선별진료소)
-          </li>
         </ul>
-        <ul class="category"></ul>
       </div>
     </div>
   </div>
@@ -154,85 +127,146 @@ const houseStore = "houseStore";
 const userStore = "userStore";
 export default {
   name: "HouseDetail",
-  date() {
+  data() {
     return {
       map2: null,
       markers2: [],
-      order: "",
-      orderCnt: 0,
+      order: 0,
+      key: "",
       isDetail: false,
+      aptCode: this.$route.params.aptCode,
+      loadMap: false,
     };
   },
   computed: {
-    ...mapState(houseStore, [
-      "houseDeal",
-      "houseInfo",
-      "houses",
-      "landStore",
-      "lifeStore",
-      "serviceStore",
-      "sportStore",
-      "cafeStore",
-      "foodStore",
-      "eduStore",
-      "playStore",
-      "everyStore",
-      "isGetData",
-    ]),
+    ...mapState(houseStore, ["houseDeal", "houseInfo", "houses", "isGetData"]),
     ...mapState(userStore, ["userInfo"]),
   },
   mounted() {
-    if (window.kakao && window.kakao.maps) {
+    if (this.loadMap) {
       this.initMap();
     } else {
       const script = document.createElement("script");
-      script.src =
-        "//dapi.kakao.com/v2/maps/sdk.js?appkey=e3f5368c16f60513648c83fa8b24274d&libraries=services";
       /* global kakao */
       script.onload = () => kakao.maps.load(this.initMap);
+      script.src =
+        "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=e3f5368c16f60513648c83fa8b24274d&libraries=services";
       document.head.appendChild(script);
+      this.loadMap = true;
     }
   },
   created() {
     this.markers2 = [];
+    // console.log("선택한 집");
+    // console.log(3);
+    // console.log(this.houseDeal);
+    this.getHouse({ aptCode: this.aptCode });
   },
   methods: {
-    ...mapActions(houseStore, ["getStoreList", "setBookMark"]),
+    ...mapActions(houseStore, ["getStoreList", "setBookMark", "getHouse"]),
     ...mapMutations(houseStore, ["SET_APT_DEAL"]),
-    async initMap() {
+    initMap() {
       //지도를 담을 dom
+
       const container = document.getElementById("map2");
-      var position = new kakao.maps.LatLng(
-        this.houseInfo.lat,
-        this.houseInfo.lng
+      // alert(container);
+      let position = new kakao.maps.LatLng(
+        this.houseDeal.lat,
+        this.houseDeal.lng
       ); // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
-      var options = {
+      let options = {
         center: position,
         level: 3,
       };
       this.map2 = new kakao.maps.Map(container, options);
+
+      var imageSrc = require("@/assets/marker.png"), // 마커이미지의 주소입니다
+        imageSize = new kakao.maps.Size(40, 40), // 마커이미지의 크기입니다
+        imageOption = { offset: new kakao.maps.Point(27, 69) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+
+      // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
+      var markerImage = new kakao.maps.MarkerImage(
+        imageSrc,
+        imageSize,
+        imageOption
+      );
+
       new kakao.maps.Marker({
         map: this.map2,
         position: position,
+        image: markerImage,
       });
-      // store array 지정
-      if (!this.isGetData) {
-        await this.getStoreList(this.houseInfo.dongName);
-      }
+
+      var ps = new kakao.maps.services.Places(this.map2);
+
+      kakao.maps.event.addListener(
+        this.map2,
+        "idle",
+        () => {
+          ps.categorySearch(this.key, (data, status, pagination) => {
+            console.log(data);
+            console.log(status);
+            console.log(pagination);
+
+            if (status === kakao.maps.services.Status.OK) {
+              this.markers2.forEach((marker) => {
+                marker.setMap(null);
+              });
+              data.forEach((store) => {
+                this.displayMarker(store, this.order);
+              });
+            } else {
+              console.log(status);
+            }
+          });
+        },
+        { useMapBounds: true }
+      );
+      kakao.maps.event.addListener(
+        this.map2,
+        "idle",
+        () => {
+          ps.categorySearch(this.key, (data, status, pagination) => {
+            console.log(data);
+            console.log(status);
+            console.log(pagination);
+
+            if (status === kakao.maps.services.Status.OK) {
+              this.markers2.forEach((marker) => {
+                marker.setMap(null);
+              });
+              data.forEach((store) => {
+                this.displayMarker(store, this.order);
+              });
+            } else {
+              console.log(status);
+            }
+          });
+        },
+        { useMapBounds: true }
+      );
+
+      var mapTypeControl = new kakao.maps.MapTypeControl();
+
+      // 지도에 컨트롤을 추가해야 지도위에 표시됩니다
+      // kakao.maps.ControlPosition은 컨트롤이 표시될 위치를 정의하는데 TOPRIGHT는 오른쪽 위를 의미합니다
+      this.map2.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
     },
-    moveHouseList() {
-      this.SET_APT_DEAL(null);
+    searchCategory(key, order) {
+      this.key = key;
+      this.order = order;
     },
-    displayMarker(store) {
-      var moveLatLng = new kakao.maps.LatLng(store.lat, store.lng);
-      // console.log(moveLatLng);
+    displayMarker(store, order) {
+      console.log(store);
+      console.log(order);
+      var moveLatLng = new kakao.maps.LatLng(store.y, store.x);
 
       var imageSrc =
           "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_category.png", // 마커 이미지 url, 스프라이트 이미지를 씁니다
         imageSize = new kakao.maps.Size(27, 28), // 마커 이미지의 크기
         imgOptions = {
           spriteSize: new kakao.maps.Size(72, 208), // 스프라이트 이미지의 크기
-          spriteOrigin: new kakao.maps.Point(46, this.orderCnt * 36), // 스프라이트 이미지 중 사용할 영역의 좌상단 좌표
+          spriteOrigin: new kakao.maps.Point(46, order * 36), // 스프라이트 이미지 중 사용할 영역의 좌상단 좌표
           offset: new kakao.maps.Point(11, 28), // 마커 좌표에 일치시킬 이미지 내에서의 좌표
         },
         markerImage = new kakao.maps.MarkerImage(
@@ -244,6 +278,7 @@ export default {
           position: moveLatLng, // 마커의 위치
           image: markerImage,
           clickable: true,
+          map: this.map2,
         });
 
       marker.setMap(this.map2); // 지도 위에 마커를 표출합니다
@@ -282,19 +317,18 @@ export default {
       c1.appendChild(c3);
       let c4 = document.createElement("div");
       c4.className = "desc";
-      c4.innerHTML = "주소 : " + store.address;
+      c4.innerHTML = "주소 : " + store.address_name;
       c3.appendChild(c4);
       let c5 = document.createElement("div");
       c5.className = "desc";
-      c5.innerHTML = "분류1 : " + store.classDetail1;
+      c5.innerHTML = "가게명 : " + store.place_name;
       c3.appendChild(c5);
-      let c6 = document.createElement("div");
-      c6.className = "desc";
-      c6.innerHTML = "분류2 : " + store.classDetail2;
-      c3.appendChild(c6);
       let c7 = document.createElement("button");
       c7.className = "btn-sm btn-outline-dark";
-      c7.innerHTML = "자세히 보기";
+      c7.innerHTML = "kakao 검색";
+      c7.onclick = () => {
+        window.open(store.place_url);
+      };
       c3.appendChild(c7);
 
       overlay.setContent(content);
@@ -312,79 +346,34 @@ export default {
       // 지도 중심좌표를 접속위치로 변경합니다
       // this.map2.panTo(moveLatLng);
     },
-    selCategory(order, orderCnt) {
-      this.order = order;
-      this.orderCnt = orderCnt;
-      this.markers2.forEach((marker) => {
-        marker.setMap(null);
-      });
-      this.markers2 = [];
-      switch (this.order) {
-        case "부동산":
-          this.landStore.forEach((store) => {
-            this.displayMarker(store);
-          });
-          break;
-        case "소매":
-          this.lifeStore.forEach((store) => {
-            this.displayMarker(store);
-          });
-          break;
-        case "생활서비스":
-          this.serviceStore.forEach((store) => {
-            this.displayMarker(store);
-          });
-          break;
-        case "스포츠":
-          this.sportStore.forEach((store) => {
-            this.displayMarker(store);
-          });
-          break;
-        case "카페":
-          this.cafeStore.forEach((store) => {
-            this.displayMarker(store);
-          });
-          break;
-        case "편의점":
-          this.everyStore.forEach((store) => {
-            this.displayMarker(store);
-          });
-          break;
-        case "음식":
-          this.foodStore.forEach((store) => {
-            this.displayMarker(store);
-          });
-          break;
-        case "교육":
-          this.eduStore.forEach((store) => {
-            this.displayMarker(store);
-          });
-          break;
-        case "여가":
-          this.playStore.forEach((store) => {
-            this.displayMarker(store);
-          });
-          break;
-
-        default:
-          break;
-      }
-    },
     addBookMarker() {
-      if(!this.userInfo){
+      if (!this.userInfo) {
         alert("로그인해주세요");
         this.$router.push({ name: "SignIn" });
       }
-      this.setBookMark({
-        userNo: this.userInfo.no,
-        housedealNo: this.houseDeal.no,
-      });
+      if (!this.isGetData) {
+        this.setBookMark({
+          userNo: this.userInfo.no,
+          housedealNo: this.houseDeal.no,
+        });
+      } else {
+        this.setBookMark({
+          userNo: this.userInfo.no,
+          housedealNo: this.houseDeal.일련번호,
+        });
+      }
     },
   },
 };
 </script>
 
 <style>
+.house-detail-body {
+  /* margin-top: 40px; */
+  /* padding: 50px; */
+  margin: 70px;
+}
+
 ul li {
   list-style-type: none;
   float: left;
@@ -422,7 +411,6 @@ ul li {
 .map_wrap * {
   margin: 0;
   padding: 0;
-  font-family: "Malgun Gothic", dotum, "돋움", sans-serif;
   font-size: 11px;
 }
 .map_wrap {
@@ -493,72 +481,6 @@ ul li {
 .category li.on .category_bg {
   background-position-x: -46px;
 }
-.placeinfo_wrap {
-  position: absolute;
-  bottom: 28px;
-  left: -150px;
-  width: 300px;
-}
-.placeinfo {
-  position: relative;
-  width: 100%;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  border-bottom: 2px solid #ddd;
-  padding-bottom: 10px;
-  background: #fff;
-}
-.placeinfo:nth-of-type(n) {
-  border: 0;
-  box-shadow: 0px 1px 2px #888;
-}
-.placeinfo_wrap .after {
-  content: "";
-  position: relative;
-  margin-left: -12px;
-  left: 50%;
-  width: 22px;
-  height: 12px;
-  background: url("https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png");
-}
-.placeinfo a,
-.placeinfo a:hover,
-.placeinfo a:active {
-  color: #fff;
-  text-decoration: none;
-}
-.placeinfo a,
-.placeinfo span {
-  display: block;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-}
-.placeinfo span {
-  margin: 5px 5px 0 5px;
-  cursor: default;
-  font-size: 13px;
-}
-.placeinfo .title {
-  font-weight: bold;
-  font-size: 14px;
-  border-radius: 6px 6px 0 0;
-  margin: -1px -1px 0 -1px;
-  padding: 10px;
-  color: #fff;
-  background: #d95050;
-  background: #d95050
-    url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/arrow_white.png)
-    no-repeat right 14px center;
-}
-.placeinfo .tel {
-  color: #0f7833;
-}
-.placeinfo .jibun {
-  color: #999;
-  font-size: 11px;
-  margin-top: 0;
-}
 
 .wrap {
   position: absolute;
@@ -571,81 +493,12 @@ ul li {
   font-family: "Malgun Gothic", dotum, "돋움", sans-serif;
   line-height: 1.5;
 }
-.wrap * {
-  padding: 0;
-  margin: 0;
-}
-.wrap .info {
-  border-radius: 5px;
-  border-bottom: 2px solid #ccc;
-  border-right: 1px solid #ccc;
-  overflow: auto;
-  background: #fff;
-}
-.wrap .info:nth-child(1) {
-  border: 0;
-  box-shadow: 0px 1px 2px #888;
-}
-.info .title {
-  padding: 5px 0 0 10px;
-  height: 30px;
-  background: #eee;
-  border-bottom: 1px solid #ddd;
-  font-size: 18px;
-  font-weight: bold;
-}
-.info .close {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  color: #888;
-  width: 17px;
-  height: 17px;
-  background: url("https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png");
-}
-.info .close:hover {
-  cursor: pointer;
-}
-.info .body {
-  position: relative;
-  overflow: auto;
-  padding: 15px;
-}
+
 .desc {
   overflow: auto;
   text-overflow: ellipsis;
   white-space: nowrap;
   padding-bottom: 5px;
-}
-.info .img {
-  position: absolute;
-  top: 6px;
-  left: 5px;
-  width: 73px;
-  height: 71px;
-  border: 1px solid #ddd;
-  color: #888;
-  overflow: auto;
-}
-.info:after {
-  content: "";
-  position: absolute;
-  margin-left: -12px;
-  left: 50%;
-  bottom: 0;
-  width: 22px;
-  height: 12px;
-}
-
-.info-body {
-  width: 1000px;
-}
-.infohead {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  padding-top: 35px;
-  margin-bottom: 35px;
 }
 
 .deal {

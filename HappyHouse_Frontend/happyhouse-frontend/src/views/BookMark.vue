@@ -1,11 +1,9 @@
 <template>
-  <div id="body-div" class="container mt-5 notice-body">
-    <form class="form-bookmark">
-      <div id="bookmark">
-        <h1>관심목록</h1>
-        <router-view/>
-      </div>
-    </form>
+  <div class="book-mark-body container mt-5">
+    <div id="bookmark">
+      <h1>관심목록</h1>
+      <router-view />
+    </div>
   </div>
 </template>
 
